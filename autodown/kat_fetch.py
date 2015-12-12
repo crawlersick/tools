@@ -1,4 +1,5 @@
 #!/bin/python2.7
+import re
 import anaurl
 import sys
 import urllib
@@ -16,6 +17,10 @@ for i,e in enumerate(anares):
     temp=list(anares[i])
     temp[0]=urllib.unquote(temp[0])
     temp[1]=urllib.unquote(temp[1])
-    anares[i]=tuple(temp)
+    print temp[0]
+    m=re.match(r'.*S([0-9]+)E[0-9]+.*',temp[0])
+    temp.append(m.group(1))
+    #anares[i]=tuple(temp)
+    anares[i]=temp
 
 print anares
