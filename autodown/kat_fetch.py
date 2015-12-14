@@ -3,6 +3,7 @@ import re
 import anaurl
 import sys
 import urllib
+import pagelistprocess
 if len(sys.argv)!=2:
     print 'only one parameter!'
     sys.exit(2)
@@ -17,10 +18,16 @@ for i,e in enumerate(anares):
     temp=list(anares[i])
     temp[0]=urllib.unquote(temp[0])
     temp[1]=urllib.unquote(temp[1])
-    print temp[0]
-    m=re.match(r'.*S([0-9]+)E[0-9]+.*',temp[0])
-    temp.append(m.group(1))
+    #print temp[0]
+    m=re.match(r'.*S([0-9]+)E([0-9]+).*',temp[0],re.IGNORECASE)
+    if m:
+        temp.append(m.group(1,2))
+    else:
+        temp.append('NA')
+
     #anares[i]=tuple(temp)
     anares[i]=temp
 
-print anares
+#print anares
+e=pagelistprocess.procs9e9(anares,sys.argv[1])
+print e
