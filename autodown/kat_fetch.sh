@@ -1,7 +1,7 @@
 #!/bin/bash
 #set -x
 downloadfolder=$HOME"/Downloads"
-keyw='big'
+keyw='big bang'
 pyp=`echo $0|perl -p -e 's/sh$/py/'`
 maglink=`$pyp "$keyw"`
 if [ ! "$maglink" == 'None' ]
