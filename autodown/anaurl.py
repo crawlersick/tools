@@ -9,29 +9,29 @@ import urlparse
 def ana(urlstr,expstr,cks=None,postdata=None):
     #print "this is ana moudle start",urlstr,expstr
     matlist=['init','init']
-    print "1"
+    #print "1"
     headers = {  
     'User-Agent':'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.6) Gecko/20091201 Firefox/3.5.6'  
     }  
-    print "2"
+    #print "2"
     if (cks is not None and cks.strip() !=''):
-        print "2.1"
+        #print "2.1"
         #cks_dict=dict(item.strip().split("=") for item in cks.split(";"))
         #cks_dict=dict(item.split("=") for item in cks.split(";"))
         cks_dict={}
         for item in cks.split(";"):
             if item and not item.isspace():
-                print "22222222221"+item
+                #print "22222222221"+item
                 sitem=item.split("=")
                 cks_dict[sitem[0]]=sitem[1]
 
-        print "2.2"
+        #print "2.2"
         logging.info('coockies passed in:')
         logging.info(cks)
         logging.info(cks_dict)
         headers.update({'Cookie':"; ".join('%s=%s' % (k,v) for k,v in cks_dict.items())})
         #headers.update({'Cookie':'a=b'})
-    print "3"
+    #print "3"
     logging.info(headers)
     #if data=postdata is set, then it call POST, or it call GET
     logging.info('opening '+urlstr )
@@ -43,7 +43,7 @@ def ana(urlstr,expstr,cks=None,postdata=None):
         ) 
         resp=urllib2.urlopen(req)
         #print resp.read() 
-        print resp.info()
+        #print resp.info()
         if resp.info().get('Content-Encoding') == 'gzip':
             buf=StringIO(resp.read())
             f=gzip.GzipFile(fileobj=buf)
@@ -69,4 +69,3 @@ if __name__=='__main__':
     #resu=ana("http://share.popgo.org",'(?<=<td class="inde_tab_hot"><a href=").*?(?=&)')
     resu=ana("https://kat.cr/usearch/big%20bang/",'(?<=<td class="inde_tab_hot"><a href=").*?(?=&)')
     print resu
-

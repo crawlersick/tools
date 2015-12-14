@@ -10,10 +10,13 @@ if len(sys.argv)!=2:
 else:
     targetname=sys.argv[1]
     targetname=urllib.quote(targetname)
-    print "start process {p1} for kat".format(p1=targetname)
+    #print "start process {p1} for kat".format(p1=targetname)
 kats='https://kat.cr/usearch/'+targetname
-print "full url {p1} for kat".format(p1=kats)
+#print "full url {p1} for kat".format(p1=kats)
 anares=anaurl.ana(kats,'data-sc-params="{ \'name\': \'(.*?)\', \'magnet\': \'(.*?)\' }"></div>')
+if len(anares[0][0])==1:
+    print 'None'
+    sys.exit(3)
 for i,e in enumerate(anares):
     temp=list(anares[i])
     temp[0]=urllib.unquote(temp[0])
