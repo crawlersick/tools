@@ -4,6 +4,7 @@ import anaurl
 import sys
 import urllib
 import pagelistprocess
+import getsub
 if len(sys.argv)!=2:
     print 'only one parameter!'
     sys.exit(2)
@@ -33,4 +34,4 @@ for i,e in enumerate(anares):
 
 #print anares
 e=pagelistprocess.procs9e9(anares,sys.argv[1])
-print e
+print e[1]+";;;"+"S"+e[2][0]+"E"+e[2][1]
