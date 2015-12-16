@@ -15,8 +15,8 @@ def uzfile(zipfilex,dlfolder):
         except UnicodeEncodeError:
             utf8name=name
         pathname = os.path.dirname(utf8name)
-        if not os.path.exists(pathname) and pathname!= "":
-            os.makedirs(pathname)
+        if not os.path.exists(dlfolder+pathname) and pathname!= "":
+            os.makedirs(dlfolder+pathname)
         data = filez.read(name)
         if not os.path.exists(dlfolder+utf8name):
             fo = open(dlfolder+utf8name, "w")
@@ -42,6 +42,12 @@ def fromabcd(epname,epnum,targetfolder):
         print ret
         uzfile(ret[0],targetfolder)
 if __name__=="__main__":
-    fromabcd('big bang','S09E10',"/home/john/Downloads/big bang/")
+    print "getsub start"
+    print sys.argv
+    a=sys.argv[1]
+    b=sys.argv[2]
+    c=sys.argv[3]
+    fromabcd(a,b,c)
+    #fromabcd('big bang','S09E10',"/home/john/Downloads/big bang/")
 
 
