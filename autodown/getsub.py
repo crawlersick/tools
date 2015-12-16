@@ -6,9 +6,26 @@ import sys
 import re
 import zipfile
 import os
+from os.path import expanduser
+def uzfile(zipfilex,dlfolder):
+    filez=zipfile.ZipFile(zipfilex,"r");
+    for name in filez.namelist():
+        try:
+            utf8name=name.decode('gbk')
+        except UnicodeEncodeError:
+            utf8name=name
+        pathname = os.path.dirname(utf8name)
+        if not os.path.exists(pathname) and pathname!= "":
+            os.makedirs(pathname)
+        data = filez.read(name)
+        if not os.path.exists(dlfolder+utf8name):
+            fo = open(dlfolder+utf8name, "w")
+            fo.write(data)
+            fo.close
+    filez.close()
 def test(e):
     print e[0]
-def fromabcd(epname,epnum):
+def fromabcd(epname,epnum,targetfolder):
     encode_epname=urllib.quote(epname)
     targeturl1='http://www.abcsub.com/?k='+encode_epname
     alist=anaurl.ana(targeturl1,'<a href="/([0-9]+)" target="_blank">(.*?)</a></span>')
@@ -23,25 +40,8 @@ def fromabcd(epname,epnum):
         print blist
         ret=urllib.urlretrieve(blist[0],"/tmp/"+tempe[0]+".zip")
         print ret
+        uzfile(ret[0],targetfolder)
 if __name__=="__main__":
-    fromabcd('big bang','S09E10')
+    fromabcd('big bang','S09E10',"/home/john/Downloads/big bang/")
 
 
-print "Processing File " + sys.argv[1]
-
-file=zipfile.ZipFile(sys.argv[1],"r");
-for name in file.namelist():
-    try:
-        utf8name=name.decode('gbk')
-    except UnicodeEncodeError:
-        utf8name=name
-    print "Extracting " + utf8name
-    pathname = os.path.dirname(utf8name)
-    if not os.path.exists(pathname) and pathname!= "":
-        os.makedirs(pathname)
-    data = file.read(name)
-    if not os.path.exists(utf8name):
-        fo = open(utf8name, "w")
-        fo.write(data)
-        fo.close
-file.close()
