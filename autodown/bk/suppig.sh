@@ -1,5 +1,7 @@
 #!/bin/bash
-
+slink='www.suppig.net/forum.php?mod=viewthread&tid=1116262&highlight=%BD%F1%C8%D5%D7%D3'
+curl --compressed -Lo /tmp/subp.txt $slink
+exit 0
 downloadfolder=$HOME'/Downloads'
 keyw=$1
 seedw=$2
