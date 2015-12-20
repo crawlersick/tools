@@ -3,7 +3,7 @@ bkifs=$IFS
 IFS=$'\r\n'
 namelist=($(cat ep.list))
 IFS=$bkifs
-time_s=`expr "3600" '*' "12"`
+time_s=`expr "3600" '*' "72"`
 while [[ true ]]
 do
 i=0

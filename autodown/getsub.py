@@ -41,6 +41,9 @@ def fromabcd(epname,epnum,targetfolder):
         ret=urllib.urlretrieve(blist[0],"/tmp/"+tempe[0]+".zip")
         print ret
         uzfile(ret[0],targetfolder)
+    else:
+        print 'not sub found!'
+        sys.exit(99)
 if __name__=="__main__":
     print "getsub start"
     print sys.argv
