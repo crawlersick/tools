@@ -21,6 +21,8 @@ def procs9e9(eplist,epname):
     for i,e in enumerate(eplist):
         #print e[0]
         #print e
+        if i > 4:
+            break
         if e[2] != "NA":
             #print e[2][0]
             #print e[2][1]
@@ -33,6 +35,6 @@ def procs9e9(eplist,epname):
     f.close()
 
 if __name__=="__main__":
-    procs9e9([])
+    procs9e9([],'aaa')
 
 

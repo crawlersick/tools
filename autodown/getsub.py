@@ -7,6 +7,7 @@ import re
 import zipfile
 import os
 from os.path import expanduser
+from subprocess import call
 def uzfile(zipfilex,dlfolder):
     filez=zipfile.ZipFile(zipfilex,"r");
     for name in filez.namelist():
@@ -38,9 +39,20 @@ def fromabcd(epname,epnum,targetfolder):
         page2='http://www.abcsub.com/'+tempe[0]
         blist=anaurl.ana(page2,'<div class="download-link"><span><font class="f1">.*?</font><a href="(.*?)" target="_blank">.*?</a></span></div>')
         print blist
-        ret=urllib.urlretrieve(blist[0],"/tmp/"+tempe[0]+".zip")
-        print ret
-        uzfile(ret[0],targetfolder)
+        fext=blist[0].split(".")[-1]
+        if fext=='zip':
+            ret=urllib.urlretrieve(blist[0],"/tmp/"+tempe[0]+".zip")
+            uzfile(ret[0],targetfolder)
+        elif fext=='rar':
+            ret=urllib.urlretrieve(blist[0],"/tmp/"+tempe[0]+".rar")
+            retcode=call(["unrar","x",ret[0],targetfolder])
+            if retcode!=0:
+                print 'unrar error '+ret[0]
+                sys.exit[97]
+        else:
+            print 'unkonw file type for '+blist[0]
+            sys.exit[98]
+
     else:
         print 'not sub found!'
         sys.exit(99)
