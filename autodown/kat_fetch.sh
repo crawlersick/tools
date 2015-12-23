@@ -24,6 +24,7 @@ then
 fi
 pyp=`echo $0|perl -p -e 's/sh$/py/'`
 maglink=`$pyp "$keyw"`
+
 if [[ ! "$maglink" == 'None' ]]
 then
 	link=`echo $maglink|awk -F";;;"  '{print $1}'`

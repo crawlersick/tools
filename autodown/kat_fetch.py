@@ -34,4 +34,7 @@ for i,e in enumerate(anares):
 
 #print anares
 e=pagelistprocess.procs9e9(anares,sys.argv[1])
-print e[1]+";;;"+"S"+e[2][0]+"E"+e[2][1]
+if len(e)==0:
+    print 'None'
+else:
+    print e[1]+";;;"+"S"+e[2][0]+"E"+e[2][1]
