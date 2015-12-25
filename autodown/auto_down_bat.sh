@@ -11,7 +11,8 @@ i=0
 	while [[ $i -lt ${#namelist[@]} ]]
 	do
 		
-		pogo.sh "${namelist[i]}" &
+		36dm.sh "${namelist[i]}" &
+		#pogo.sh "${namelist[i]}" &
                 sleep 30
 
 	i=`expr $i + 1`

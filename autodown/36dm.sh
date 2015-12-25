@@ -65,7 +65,8 @@ echo 'p2list len:'${#p2list[@]}
 echo 3 lists not equal,please check!
 fi
 i='0'
-while [[ $i -lt ${#torlinklist[@]} ]]
+#while [[ $i -lt ${#torlinklist[@]} ]]
+while [[ $i -lt ${#namelist[@]} ]]
 do
 #echo ${namelist[i]}'***'${sizelist[i]}'***'${torlinklist[i]}'***'${dpagelist[i]}
 aaaa=`echo -e '\u5B57'`
@@ -75,13 +76,14 @@ dddd=`echo -e '\u7B80'`
 eeee=`echo -e '\u7E41'`
 echo ${namelist[i]} | grep -qP "[$aaaa$bbbb$cccc$dddd$eeee]"
 greprec=$?
-seedcnt=`echo ${sizelist[i]}|awk -F "</td><td>" '{print $2}'|awk -F "</td>" '{print $1}'`
+#seedcnt=`echo ${sizelist[i]}|awk -F "</td><td>" '{print $2}'|awk -F "</td>" '{print $1}'`
 
-if [[ $seedcnt -gt $seedw && $greprec -eq 0 ]]
+#if [[ $seedcnt -gt $seedw && $greprec -eq 0 ]]
+if [[ $greprec -eq 0 ]]
 then
 
-	sizemb=`echo ${sizelist[i]}|awk -F "</td><td>" '{print $1}'|awk '{print $1}'|awk -F '.' '{print $1}'`
-	sizeunit=`echo ${sizelist[i]}|awk -F "</td><td>" '{print $1}'|awk '{print $2}'`
+	sizemb=`echo ${sizelist[i]}|awk '{print $1}'|awk -F '.' '{print $1}'`
+	sizeunit=`echo ${sizelist[i]}|grep -oP '[A-Z]+'`
 echo "size is " $sizemb
 echo "unit is " $sizeunit
 	if [[ $sizeunit -eq 'MB' && $sizemb -lt 55 ]]
@@ -91,11 +93,8 @@ echo "unit is " $sizeunit
 		continue
 	fi
 
-		echo ${namelist[i]}'***'${sizelist[i]}'***'${torlinklist[i]}'***'${dpagelist[i]}
+		echo ${namelist[i]}'***'${sizelist[i]}'***'${p2list[i]}
 
-#【極影字幕社】 ★ 六花的勇者 Rokka_no_Yuusha 第03話 BIG5 MP4 720P
-#【極影字幕社】 ★7月新番 【亂步奇譚 Game of Laplace】【Ranpo Kitan Game of Laplace】【03】BIG5 MP4_720P
-       #epnum=`echo ${namelist[i]}|grep -ioP '(?<=[\[第【\s])[0-9_\.-]+(?=[\]話话】\s])'`
 	epnum=`echo ${namelist[i]}|grep -ioP '(?<=[\[第【\s])[0-9_\.]+(?=[\]\[話话】\s])'`
 	echo 'epnum---------'$epnum
 
@@ -105,17 +104,21 @@ echo "unit is " $sizeunit
 		echo 'epnumber is '$epnum
 		break
 	else 
-	torlinklist[i]=""
+	p2list[i]=""
 	fi
 	
 fi
 
 i=`expr $i + 1`
 done
+textall=`curl -s --compressed 'http://www.36dm.com/'"${p2list[i]}"|perl -p -e 's/\r//g'`
+exp11p=`sed -n 11p explist`
+list11p=`echo $textall | grep -oP "$exp11p"`       
+echo $list11p
 
-echo 'begin download!'${torlinklist[i]}
+echo 'begin download!'echo $list11p
 #read asdlkfjasflkasjdf
-if [[ ! -z "${torlinklist[i]}" ]]
+if [[ ! -z "$list11p" ]]
 then
 	touch "$downloadfolder/autodownload.list"
 	grep -q "$keyw""_""$epnum" "$downloadfolder/autodownload.list"
@@ -129,12 +132,13 @@ then
 	fi
 
 	mkdir -p "$downloadfolder/$keyw"
-	aria2c -c -d "$downloadfolder/$keyw" --enable-dht=true --enable-dht6=true --enable-peer-exchange=true --follow-metalink=mem --seed-time=0 --disk-cache=1024M --enable-color=true --max-overall-upload-limit=50K --bt-tracker="udp://coppersurfer.tk:6969/announce,http://t2.popgo.org:7456/annonce" "${torlinklist[i]}" | tee "/tmp/$keyw.log"
+        aria2c -c -d "$downloadfolder/$keyw" --enable-dht=true --enable-dht6=true --enable-peer-exchange=true --follow-metalink=mem --seed-time=0 --disk-cache=1024M --enable-color=true --max-overall-upload-limit=50K "$list11p" | tee "/tmp/$keyw.log"
+        #aria2c -c -d "$downloadfolder/$keyw" --enable-dht=true --enable-dht6=true --enable-peer-exchange=true --follow-metalink=mem --seed-time=0 --disk-cache=1024M --enable-color=true --max-overall-upload-limit=50K --bt-tracker="udp://coppersurfer.tk:6969/announce,http://tracker.36dm.com:2710/announce,http://t2.popgo.org:7456/annonce" "$list11p" | tee "/tmp/$keyw.log"
 	recode=$?
 	if [[ $recode -eq 0 ]]
 	then
 		echo "$keyw""_""$epnum" >> "$downloadfolder/autodownload.list"
-		tail "/tmp/$keyw.log" | perl -p -e 's/\/home\/.*?\//^_^.../' |  mail -v -s "$keyw""_""$epnum"" Done!" `git config --get user.email` 
+		#tail "/tmp/$keyw.log" | perl -p -e 's/\/home\/.*?\//^_^.../' |  mail -v -s "$keyw""_""$epnum"" Done!" `git config --get user.email` 
 		date | tee -a "/tmp/$keyw.log"
 		exit 0
 	else
