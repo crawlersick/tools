@@ -53,27 +53,16 @@ IFS=$'\r\n'
 namelist=($(echo "$list9p"))
 sizelist=($(echo "$list10p"))
 p2list=($(echo "$list8p"))
-#namelist=($(cat /tmp/temp.txt))
+IFS=$ifsbk
 echo ${#namelist[@]}
 echo ${#sizelist[@]}
 echo ${#p2list[@]}
-
-exit
-#set +x
-IFS=$'\r\n'
-namelist=($(echo $textall | grep -oP "`sed -n 9p explist`"))
-sizelist=($(echo $textall | grep -oP "`sed -n 10p explist`"))
-p2list=($(echo $textall | grep -oP "`sed -n 8p explist`"))
-#dpagelist=($(echo $textall | grep -oP "`sed -n 4p explist`"))
-#torlinklist=($(echo $textall | grep -oP "`sed -n 5p explist`"))
-#set -x
-if [[ ! ${#torlinklist[@]} == ${#dpagelist[@]} && ${#namelist[@]} == ${#sizelist[@]} && ${#sizelist[@]} == ${#dpagelist[@]} ]]
+if [[ ! ${#namelist[@]} == ${#sizelist[@]} && ${#sizelist[@]} == ${#p2list[@]} ]]
 then
 echo 'namelist len:'${#namelist[@]}
 echo 'sizelist len:'${#sizelist[@]}
-echo 'dpagelist len:'${#dpagelist[@]}
-echo 'torlinklist len:'${#torlinklist[@]}
-echo 4 lists not equal,please check!
+echo 'p2list len:'${#p2list[@]}
+echo 3 lists not equal,please check!
 fi
 i='0'
 while [[ $i -lt ${#torlinklist[@]} ]]
