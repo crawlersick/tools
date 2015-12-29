@@ -82,7 +82,7 @@ greprec=$?
 if [[ $greprec -eq 0 ]]
 then
 
-	sizemb=`echo ${sizelist[i]}|awk '{print $1}'|awk -F '.' '{print $1}'`
+	sizemb=`echo ${sizelist[i]}|awk '{print $1}'|awk -F '.' '{print $1}'|grep -oP '[0-9]+'`
 	sizeunit=`echo ${sizelist[i]}|grep -oP '[A-Z]+'`
 echo "size is " $sizemb
 echo "unit is " $sizeunit
@@ -132,7 +132,7 @@ then
 	fi
 
 	mkdir -p "$downloadfolder/$keyw"
-        aria2c -c -d "$downloadfolder/$keyw" --enable-dht=true --enable-dht6=true --enable-peer-exchange=true --follow-metalink=mem --seed-time=0 --disk-cache=1024M --enable-color=true --max-overall-upload-limit=50K "$list11p" | tee "/tmp/$keyw.log"
+        aria2c -c -d "$downloadfolder/$keyw" --enable-dht=true --enable-dht6=true --enable-peer-exchange=true --follow-metalink=mem --seed-time=0 --disk-cache=1024M --enable-color=true --max-overall-upload-limit=50K --bt-tracker="udp://coppersurfer.tk:6969/announce,udp://p4p.arenabg.ch:1337" "$list11p" | tee "/tmp/$keyw.log"
         #aria2c -c -d "$downloadfolder/$keyw" --enable-dht=true --enable-dht6=true --enable-peer-exchange=true --follow-metalink=mem --seed-time=0 --disk-cache=1024M --enable-color=true --max-overall-upload-limit=50K --bt-tracker="udp://coppersurfer.tk:6969/announce,http://tracker.36dm.com:2710/announce,http://t2.popgo.org:7456/annonce" "$list11p" | tee "/tmp/$keyw.log"
 	recode=$?
 	if [[ $recode -eq 0 ]]
