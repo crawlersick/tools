@@ -27,17 +27,21 @@ def uzfile(zipfilex,dlfolder):
 def test(e):
     print e[0]
 def fromabcd(epname,epnum,targetfolder):
-    encode_epname=urllib.quote(epname)
-    targeturl1='http://www.abcsub.com/?k='+encode_epname
-    alist=anaurl.ana(targeturl1,'<a href="/([0-9]+)" target="_blank">(.*?)</a></span>')
+    encode_epname=urllib.quote_plus(epname)
+    #targeturl1='http://www.abcsub.com/?k='+encode_epname
+    targeturl1='http://www.zimuzu.tv/search/index?keyword='+encode_epname
+    #alist=anaurl.ana(targeturl1,'<a href="/([0-9]+)" target="_blank">(.*?)</a></span>')
+    alist=anaurl.ana(targeturl1,'<div class="t f14"><a href="/subtitle/([0-9]+)"><strong class="list_title">(.*?)</strong>')
     tempe='None'
     for i,e in enumerate(alist):
         if re.search(epnum,e[1],re.IGNORECASE):
             tempe=e
             break
     if not tempe=='None':
-        page2='http://www.abcsub.com/'+tempe[0]
-        blist=anaurl.ana(page2,'<div class="download-link"><span><font class="f1">.*?</font><a href="(.*?)" target="_blank">.*?</a></span></div>')
+        #page2='http://www.abcsub.com/'+tempe[0]
+        page2='http://www.zimuzu.tv/subtitle/'+tempe[0]
+        #blist=anaurl.ana(page2,'<div class="download-link"><span><font class="f1">.*?</font><a href="(.*?)" target="_blank">.*?</a></span></div>')
+        blist=anaurl.ana(page2,'<h3>字幕下载：<a href="(.*?)" target="_blank">.*?</a></h3>')
         print blist
         fext=blist[0].split(".")[-1]
         if fext=='zip':
