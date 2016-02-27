@@ -1,5 +1,6 @@
 #!/bin/bash
 downloadfolder=$HOME'/Downloads'
+touch "$downloadfolder/autodownload.list"
 keyw=$1
 seedw=$2
 if [[ -z "$keyw" ]]
@@ -73,6 +74,8 @@ fi
 i='0'
 #while [[ $i -lt ${#torlinklist[@]} ]]
 #while [[ $i -lt ${#namelist[@]} ]]
+gettarget='true'
+#set -x
 while [[ $i -lt ${#timelist[@]} ]]
 do
 echo ${namelist[i]}'***'${sizelist[i]}'***'${torlinklist[i]}'***'${dpagelist[i]}
@@ -112,17 +115,36 @@ then
 
 	if [[ ! -z "$epnum" && "$epnum" != '-' ]]
 	then
+	    #grep -q "$keyw""_""$epnum" "$downloadfolder/autodownload.list"
+            keystr="$keyw""_""$epnum" 
+	    grep -q "$keystr" "$downloadfolder/autodownload.list"
+	    re_code=$?
+	    if [[ $re_code -eq 0 ]]
+	    	then
+	    	echo "$keyw""_""$epnum"" is already done!"
+                i=`expr $i + 1`
+                gettarget='false'
+                continue
+            else
+                gettarget='true'
+            fi
 
-		echo 'epnumber is '$epnum
-		break
+	    echo 'epnumber is '$epnum
+	    break
 	else 
-	p2list[i]=""
+        gettarget='false'
 	fi
 	
 fi
 
 i=`expr $i + 1`
 done
+if [[ "$gettarget" == "false" ]]
+then
+    echo 'no new ones found!!!'
+    exit 0
+fi
+
 textall=`curl -s --compressed 'http://www.36dm.com/'"${p2list[i]}"|perl -p -e 's/\r//g'`
 exp11p=`sed -n 11p explist`
 list11p=`echo $textall | grep -oP "$exp11p"`       
@@ -132,16 +154,16 @@ echo 'begin download!'echo $list11p
 #read asdlkfjasflkasjdf
 if [[ ! -z "$list11p" && ! ${#timelist[@]} -eq 0 ]]
 then
-	touch "$downloadfolder/autodownload.list"
-	grep -q "$keyw""_""$epnum" "$downloadfolder/autodownload.list"
-	re_code=$?
-	if [[ $re_code -eq 0 ]]
-		then
-		echo "$keyw""_""$epnum"" is already done!"
-		
-		date
-		exit 0
-	fi
+#       touch "$downloadfolder/autodownload.list"
+#	grep -q "$keyw""_""$epnum" "$downloadfolder/autodownload.list"
+#	re_code=$?
+#	if [[ $re_code -eq 0 ]]
+#		then
+#		echo "$keyw""_""$epnum"" is already done!"
+#		
+#		date
+#		exit 0
+#	fi
 
 	mkdir -p "$downloadfolder/$keyw"
         aria2c -c -d "$downloadfolder/$keyw" --enable-dht=true --enable-dht6=true --enable-peer-exchange=true --follow-metalink=mem --seed-time=0 --disk-cache=1024M --enable-color=true --max-overall-upload-limit=50K --bt-tracker="http://tracker.36dm.com:2710/announce,udp://coppersurfer.tk:6969/announce,udp://p4p.arenabg.ch:1337" "$list11p" | tee "/tmp/$keyw.log"
