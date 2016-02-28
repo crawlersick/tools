@@ -109,11 +109,10 @@ then
 
 		#echo ${namelist[i]}'***'${sizelist[i]}'***'${p2list[i]}
 		echo ${namelist[i]}'******'${p2list[i]}
-
 	epnum=`echo ${namelist[i]}|grep -ioP '(?<=[\[第【\s])[0-9_\.]+(?=[\]\[話话】\s])'| tr '\n' ' '`
 	echo 'epnum---------'$epnum
 
-	if [[ ! -z "$epnum" && "$epnum" != '-' ]]
+	if [[ ! -z "$epnum" && "$epnum" != '-' && "$epnum" != '' ]]
 	then
 	    #grep -q "$keyw""_""$epnum" "$downloadfolder/autodownload.list"
             keystr="$keyw""_""$epnum" 
@@ -134,7 +133,8 @@ then
 	else 
         gettarget='false'
 	fi
-	
+else
+gettarget='false'
 fi
 
 i=`expr $i + 1`
@@ -144,6 +144,7 @@ then
     echo 'no new ones found!!!'
     exit 0
 fi
+#read asdlkfjasflkasjdf
 
 textall=`curl -s --compressed 'http://www.36dm.com/'"${p2list[i]}"|perl -p -e 's/\r//g'`
 exp11p=`sed -n 11p explist`
@@ -151,7 +152,6 @@ list11p=`echo $textall | grep -oP "$exp11p"`
 echo $list11p
 echo $i
 echo 'begin download!'echo $list11p
-#read asdlkfjasflkasjdf
 if [[ ! -z "$list11p" && ! ${#timelist[@]} -eq 0 ]]
 then
 #       touch "$downloadfolder/autodownload.list"
