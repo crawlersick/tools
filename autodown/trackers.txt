@@ -1,0 +1,1 @@
+ --bt-tracker="udp://tracker.publicbt.com/announce,udp://glotorrents.pw:6969/announe,udp://tracker.openbittorrent.com:80/announce" 

@@ -10,10 +10,16 @@ do
 i=0
 	while [[ $i -lt ${#namelist[@]} ]]
 	do
+            THREAD_COUNT=$(ps | grep "36dm.sh" | wc -l)
+            while [ $THREAD_COUNT -ge 1 ]
+            do
+            ps -f
+                sleep 900
+                THREAD_COUNT=$(ps | grep "36dm.sh" | wc -l)
+            done
 		
-		36dm.sh "${namelist[i]}" &
-		#pogo.sh "${namelist[i]}" &
-                sleep 30
+	    36dm.sh "${namelist[i]}" &
+            sleep 30
 
 	i=`expr $i + 1`
 	done

@@ -43,13 +43,13 @@ textall=`curl -s --compressed -G --data-urlencode "keyword=$keyw" http://www.36d
 		exit 2
 	fi
 exp9p=`sed -n 9p explist`
-list9p=`echo $textall | grep -oP "$exp9p"`       
+list9p=`echo $textall | grep -aoP "$exp9p"`       
 exp10p=`sed -n 10p explist`
-list10p=`echo $textall | grep -oP "$exp10p"`       
+list10p=`echo $textall | grep -aoP "$exp10p"`       
 exp8p=`sed -n 8p explist`
-list8p=`echo $textall | grep -oP "$exp8p"`       
+list8p=`echo $textall | grep -aoP "$exp8p"`       
 exp13p=`sed -n 13p explist`
-list13p=`echo $textall | grep -oP "$exp13p"`       
+list13p=`echo $textall | grep -aoP "$exp13p"`       
 ifsbk=$IFS
 IFS=$'\r\n'
 namelist=($(echo "$list9p"))
@@ -166,7 +166,7 @@ then
 #	fi
 
 	mkdir -p "$downloadfolder/$keyw"
-        aria2c -c -d "$downloadfolder/$keyw" --enable-dht=true --enable-dht6=true --enable-peer-exchange=true --follow-metalink=mem --seed-time=0 --disk-cache=1024M --enable-color=true --max-overall-upload-limit=50K --bt-tracker="http://tracker.36dm.com:2710/announce,udp://coppersurfer.tk:6969/announce,udp://p4p.arenabg.ch:1337" "$list11p" | tee "/tmp/$keyw.log"
+        aria2c -c -d "$downloadfolder/$keyw" --enable-dht=true --enable-dht6=true --enable-peer-exchange=true --follow-metalink=mem --seed-time=0 --max-overall-upload-limit=50K --bt-tracker="udp://tracker.publicbt.com/announce,udp://glotorrents.pw:6969/announe,udp://tracker.openbittorrent.com:80/announce,udp://coppersurfer.tk:6969/announce,udp://p4p.arenabg.ch:1337" "$list11p" | tee "/tmp/$keyw.log"
         #aria2c -c -d "$downloadfolder/$keyw" --enable-dht=true --enable-dht6=true --enable-peer-exchange=true --follow-metalink=mem --seed-time=0 --disk-cache=1024M --enable-color=true --max-overall-upload-limit=50K --bt-tracker="udp://coppersurfer.tk:6969/announce,http://tracker.36dm.com:2710/announce,http://t2.popgo.org:7456/annonce" "$list11p" | tee "/tmp/$keyw.log"
 	recode=$?
 	if [[ $recode -eq 0 ]]
