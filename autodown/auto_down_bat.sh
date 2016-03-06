@@ -11,10 +11,10 @@ i=0
 	while [[ $i -lt ${#namelist[@]} ]]
 	do
             THREAD_COUNT=$(ps | grep "36dm.sh" | wc -l)
-            while [ $THREAD_COUNT -ge 1 ]
+            while [ $THREAD_COUNT -ge 2 ]
             do
             ps -f
-                sleep 900
+                sleep 180
                 THREAD_COUNT=$(ps | grep "36dm.sh" | wc -l)
             done
 		
