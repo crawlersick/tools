@@ -166,7 +166,7 @@ then
 #	fi
 
 	mkdir -p "$downloadfolder/$keyw"
-        aria2c -c -d "$downloadfolder/$keyw" --enable-dht=true --enable-dht6=true --enable-peer-exchange=true --follow-metalink=mem --seed-time=0 --max-overall-upload-limit=50K --bt-tracker="udp://tracker.publicbt.com/announce,udp://glotorrents.pw:6969/announe,udp://tracker.openbittorrent.com:80/announce,udp://coppersurfer.tk:6969/announce,udp://p4p.arenabg.ch:1337" "$list11p" | tee "/tmp/$keyw.log"
+        aria2c -c -d "$downloadfolder/$keyw" --enable-dht=true --enable-dht6=true --enable-peer-exchange=true --follow-metalink=mem --seed-time=0 --max-overall-upload-limit=50K --bt-tracker="http://open.nyaatorrents.info:6544/announce,http://tracker.haretahoo.science:2710/announce,udp://tracker.publicbt.com/announce,udp://glotorrents.pw:6969/announe,udp://tracker.openbittorrent.com:80/announce,udp://coppersurfer.tk:6969/announce,udp://p4p.arenabg.ch:1337" "$list11p" | tee "/tmp/$keyw.log"
         #aria2c -c -d "$downloadfolder/$keyw" --enable-dht=true --enable-dht6=true --enable-peer-exchange=true --follow-metalink=mem --seed-time=0 --disk-cache=1024M --enable-color=true --max-overall-upload-limit=50K --bt-tracker="udp://coppersurfer.tk:6969/announce,http://tracker.36dm.com:2710/announce,http://t2.popgo.org:7456/annonce" "$list11p" | tee "/tmp/$keyw.log"
 	recode=$?
 	if [[ $recode -eq 0 ]]
