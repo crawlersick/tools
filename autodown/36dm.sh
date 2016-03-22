@@ -27,8 +27,17 @@ fi
 THREAD_COUNT=$(ps -ef | grep "aria2c" | grep "$keyw" | wc -l)
 if [[ $THREAD_COUNT -gt 0 ]]
 then
-	echo "$keyw"" is proccessing... skip this now."
-	exit 0
+ 	ariapid=`ps -ef |grep aria2 | grep "$keyw"|tail -1| awk '{print $2}'`
+	runtime=`ps -p $ariapid -o etimes=`
+	if [[ $runtime -gt 8000 ]]
+	then
+		echo "$keyw runtime $runtime , kill it now."
+		kill -SIGINT  $ariapid
+		sleep 30
+	else
+		echo "$keyw"" is proccessing... skip this now."
+		exit 0
+	fi
 fi
 
 
@@ -166,13 +175,12 @@ then
 #	fi
 
 	mkdir -p "$downloadfolder/$keyw"
-        aria2c -c -d "$downloadfolder/$keyw" --enable-dht=true --enable-dht6=true --enable-peer-exchange=true --follow-metalink=mem --seed-time=0 --max-overall-upload-limit=50K --bt-tracker="http://open.nyaatorrents.info:6544/announce,http://tracker.haretahoo.science:2710/announce,udp://tracker.publicbt.com/announce,udp://glotorrents.pw:6969/announe,udp://tracker.openbittorrent.com:80/announce,udp://coppersurfer.tk:6969/announce,udp://p4p.arenabg.ch:1337" "$list11p" | tee "/tmp/$keyw.log"
-        #aria2c -c -d "$downloadfolder/$keyw" --enable-dht=true --enable-dht6=true --enable-peer-exchange=true --follow-metalink=mem --seed-time=0 --disk-cache=1024M --enable-color=true --max-overall-upload-limit=50K --bt-tracker="udp://coppersurfer.tk:6969/announce,http://tracker.36dm.com:2710/announce,http://t2.popgo.org:7456/annonce" "$list11p" | tee "/tmp/$keyw.log"
+        aria2c -c -d "$downloadfolder/$keyw" --log="/tmp/$keyw.log" --log-level=notice --enable-dht=true --enable-dht6=true --enable-peer-exchange=true --follow-metalink=mem --seed-time=0 --max-overall-upload-limit=50K --bt-tracker="http://open.nyaatorrents.info:6544/announce,http://tracker.haretahoo.science:2710/announce,udp://tracker.publicbt.com/announce,udp://glotorrents.pw:6969/announe,udp://tracker.openbittorrent.com:80/announce,udp://coppersurfer.tk:6969/announce,udp://p4p.arenabg.ch:1337" "$list11p" 
+	#| tee "/tmp/$keyw.log"
 	recode=$?
 	if [[ $recode -eq 0 ]]
 	then
 		echo "$keyw""_""$epnum" >> "$downloadfolder/autodownload.list"
-		#tail "/tmp/$keyw.log" | perl -p -e 's/\/home\/.*?\//^_^.../' |  mail -v -s "$keyw""_""$epnum"" Done!" `git config --get user.email` 
 		date | tee -a "/tmp/$keyw.log"
 		exit 0
 	else
