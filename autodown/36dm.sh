@@ -175,7 +175,13 @@ then
 #	fi
 
 	mkdir -p "$downloadfolder/$keyw"
-        aria2c -c -d "$downloadfolder/$keyw" --log="/tmp/$keyw.log" --log-level=notice --enable-color=false --enable-dht=true --enable-dht6=true --enable-peer-exchange=true --follow-metalink=mem --seed-time=0 --max-overall-upload-limit=50K --bt-tracker="http://open.nyaatorrents.info:6544/announce,http://tracker.haretahoo.science:2710/announce,udp://tracker.publicbt.com/announce,udp://glotorrents.pw:6969/announe,udp://tracker.openbittorrent.com:80/announce,udp://coppersurfer.tk:6969/announce,udp://p4p.arenabg.ch:1337" "$list11p" 
+	if [[ ! -f trackers.txt ]]
+	then
+		echo 'trackers.txt not found in current folder!'
+		exit 404
+	fi
+	trackers=`cat trackers.txt`
+        aria2c -c -d "$downloadfolder/$keyw" --log="/tmp/$keyw.log" --log-level=notice --enable-color=false --enable-dht=true --enable-dht6=true --enable-peer-exchange=true --follow-metalink=mem --seed-time=30 --max-overall-upload-limit=50K --bt-tracker=$trackers "$list11p" 
 	#| tee "/tmp/$keyw.log"
 	recode=$?
 	if [[ $recode -eq 0 ]]

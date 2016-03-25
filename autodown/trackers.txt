@@ -1,0 +1,1 @@
+http://open.acgtracker.com:1096/announce,http://mgtracker.org:2710/announce

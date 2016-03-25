@@ -2,14 +2,14 @@
 arc=`uname -m|cut -c 1-3`
 if [[ $arc == 'arm' ]]
 then
-	thrcnt=1
+	thrcnt=2
 else
 	thrcnt=8
 fi
 IFS=$'\r\n'
 namelist=($(cat auto_ani.list))
 
-time_s=`expr "900" '*' "1"`
+time_s=`expr "3600" '*' "1"`
 
 while [[ true ]]
 do
@@ -48,12 +48,12 @@ i=0
 		if [[ $THREAD_COUNT -ge $thrcnt ]]
 		then
 			echo 'aria2c thr greater then '$thrcnt' , continue'
-			sleep 30
+			sleep 900
 			i=`expr $i + 1`
 			continue
 		fi
 		36dm.sh "${namelist[i]}" &
-		sleep 30
+		sleep 50
 		i=`expr $i + 1`
 	done
 sleep $time_s
