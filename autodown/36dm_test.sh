@@ -1,6 +1,6 @@
 #!/bin/bash
-set -x
 downloadfolder=$HOME'/Downloads'
+touch "$downloadfolder/autodownload.list"
 keyw=$1
 seedw=$2
 if [[ -z "$keyw" ]]
@@ -24,6 +24,12 @@ fi
 
 
 
+THREAD_COUNT=$(ps -ef | grep "aria2c" | grep "$keyw" | wc -l)
+if [[ $THREAD_COUNT -gt 0 ]]
+then
+	echo "$keyw"" is proccessing... skip this now."
+	exit 0
+fi
 
 
 #set -x
@@ -37,13 +43,13 @@ textall=`curl -s --compressed -G --data-urlencode "keyword=$keyw" http://www.36d
 		exit 2
 	fi
 exp9p=`sed -n 9p explist`
-list9p=`echo $textall | grep -oP "$exp9p"`       
+list9p=`echo $textall | grep -aoP "$exp9p"`       
 exp10p=`sed -n 10p explist`
-list10p=`echo $textall | grep -oP "$exp10p"`       
+list10p=`echo $textall | grep -aoP "$exp10p"`       
 exp8p=`sed -n 8p explist`
-list8p=`echo $textall | grep -oP "$exp8p"`       
+list8p=`echo $textall | grep -aoP "$exp8p"`       
 exp13p=`sed -n 13p explist`
-list13p=`echo $textall | grep -oP "$exp13p"`       
+list13p=`echo $textall | grep -aoP "$exp13p"`       
 ifsbk=$IFS
 IFS=$'\r\n'
 namelist=($(echo "$list9p"))
@@ -68,6 +74,8 @@ fi
 i='0'
 #while [[ $i -lt ${#torlinklist[@]} ]]
 #while [[ $i -lt ${#namelist[@]} ]]
+gettarget='true'
+#set -x
 while [[ $i -lt ${#timelist[@]} ]]
 do
 echo ${namelist[i]}'***'${sizelist[i]}'***'${torlinklist[i]}'***'${dpagelist[i]}
@@ -101,46 +109,65 @@ then
 
 		#echo ${namelist[i]}'***'${sizelist[i]}'***'${p2list[i]}
 		echo ${namelist[i]}'******'${p2list[i]}
-
 	epnum=`echo ${namelist[i]}|grep -ioP '(?<=[\[第【\s])[0-9_\.]+(?=[\]\[話话】\s])'| tr '\n' ' '`
 	echo 'epnum---------'$epnum
 
-	if [[ ! -z "$epnum" && "$epnum" != '-' ]]
+	if [[ ! -z "$epnum" && "$epnum" != '-' && "$epnum" != '' ]]
 	then
+	    #grep -q "$keyw""_""$epnum" "$downloadfolder/autodownload.list"
+            keystr="$keyw""_""$epnum" 
+	    grep -q "$keystr" "$downloadfolder/autodownload.list"
+	    re_code=$?
+	    if [[ $re_code -eq 0 ]]
+	    	then
+	    	echo "$keyw""_""$epnum"" is already done!"
+                i=`expr $i + 1`
+                gettarget='false'
+                continue
+            else
+                gettarget='true'
+            fi
 
-		echo 'epnumber is '$epnum
-		break
+	    echo 'epnumber is '$epnum
+	    break
 	else 
-	p2list[i]=""
+        gettarget='false'
 	fi
-	
+else
+gettarget='false'
 fi
 
 i=`expr $i + 1`
 done
+if [[ "$gettarget" == "false" ]]
+then
+    echo 'no new ones found!!!'
+    exit 0
+fi
+#read asdlkfjasflkasjdf
+
 textall=`curl -s --compressed 'http://www.36dm.com/'"${p2list[i]}"|perl -p -e 's/\r//g'`
 exp11p=`sed -n 11p explist`
 list11p=`echo $textall | grep -oP "$exp11p"`       
 echo $list11p
 echo $i
 echo 'begin download!'echo $list11p
-#read asdlkfjasflkasjdf
 if [[ ! -z "$list11p" && ! ${#timelist[@]} -eq 0 ]]
 then
-	touch "$downloadfolder/autodownload.list"
-	grep -q "$keyw""_""$epnum" "$downloadfolder/autodownload.list"
-	re_code=$?
-	if [[ $re_code -eq 0 ]]
-		then
-		echo "$keyw""_""$epnum"" is already done!"
-		
-		date
-		exit 0
-	fi
-exit 9999
+#       touch "$downloadfolder/autodownload.list"
+#	grep -q "$keyw""_""$epnum" "$downloadfolder/autodownload.list"
+#	re_code=$?
+#	if [[ $re_code -eq 0 ]]
+#		then
+#		echo "$keyw""_""$epnum"" is already done!"
+#		
+#		date
+#		exit 0
+#	fi
+
 	mkdir -p "$downloadfolder/$keyw"
-        aria2c -c -d "$downloadfolder/$keyw" --enable-dht=true --enable-dht6=true --enable-peer-exchange=true --follow-metalink=mem --seed-time=0 --disk-cache=1024M --enable-color=true --max-overall-upload-limit=50K --bt-tracker="http://tracker.36dm.com:2710/announce,udp://coppersurfer.tk:6969/announce,udp://p4p.arenabg.ch:1337" "$list11p" | tee "/tmp/$keyw.log"
-        #aria2c -c -d "$downloadfolder/$keyw" --enable-dht=true --enable-dht6=true --enable-peer-exchange=true --follow-metalink=mem --seed-time=0 --disk-cache=1024M --enable-color=true --max-overall-upload-limit=50K --bt-tracker="udp://coppersurfer.tk:6969/announce,http://tracker.36dm.com:2710/announce,http://t2.popgo.org:7456/annonce" "$list11p" | tee "/tmp/$keyw.log"
+        aria2c -c -d "$downloadfolder/$keyw" --enable-dht=true --enable-dht6=true --enable-peer-exchange=true --follow-metalink=mem --seed-time=0 --max-overall-upload-limit=50K --bt-tracker="http://tracker.haretahoo.science:2710/announce,udp://tracker.publicbt.com/announce,udp://glotorrents.pw:6969/announe,udp://tracker.openbittorrent.com:80/announce,udp://coppersurfer.tk:6969/announce,udp://p4p.arenabg.ch:1337" "$list11p" | tee "/tmp/$keyw.log"
+        #aria2c -c -d "$downloadfolder/$keyw" --enable-dht=true --enable-dht6=true --enable-peer-exchange=true --follow-metalink=mem --seed-time=0 --max-overall-upload-limit=50K --bt-tracker="http://open.nyaatorrents.info:6544/announce,http://tracker.haretahoo.science:2710/announce,udp://tracker.publicbt.com/announce,udp://glotorrents.pw:6969/announe,udp://tracker.openbittorrent.com:80/announce,udp://coppersurfer.tk:6969/announce,udp://p4p.arenabg.ch:1337" "$list11p" | tee "/tmp/$keyw.log"
 	recode=$?
 	if [[ $recode -eq 0 ]]
 	then
