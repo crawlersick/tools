@@ -2,7 +2,7 @@
 arc=`uname -m|cut -c 1-3`
 if [[ $arc == 'arm' ]]
 then
-	thrcnt=5
+	thrcnt=2
 else
 	thrcnt=10
 fi
