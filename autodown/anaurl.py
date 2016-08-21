@@ -42,8 +42,8 @@ def ana(urlstr,expstr,cks=None,postdata=None):
                                 headers = headers  
         ) 
         resp=urllib2.urlopen(req)
-        #print resp.read() 
-        #print resp.info()
+        print resp.read() 
+        print resp.info()
         if resp.info().get('Content-Encoding') == 'gzip':
             buf=StringIO(resp.read())
             f=gzip.GzipFile(fileobj=buf)

@@ -62,19 +62,19 @@ list13p=`echo $textall | grep -aoP "$exp13p"`
 ifsbk=$IFS
 IFS=$'\r\n'
 namelist=($(echo "$list9p"))
-#sizelist=($(echo "$list10p"))
+sizelist=($(echo "$list10p"))
 p2list=($(echo "$list8p"))
 timelist=($(echo "$list13p"))
 IFS=$ifsbk
 echo ${#namelist[@]}
-#echo ${#sizelist[@]}
+echo ${#sizelist[@]}
 echo ${#p2list[@]}
 echo ${#timelist[@]}
 #if [[ ! ${#namelist[@]} == ${#sizelist[@]} || ! ${#sizelist[@]} == ${#p2list[@]} ]]
 if [[ ! ${#namelist[@]} == ${#p2list[@]} ]]
 then
 echo 'namelist len:'${#namelist[@]}
-#echo 'sizelist len:'${#sizelist[@]}
+echo 'sizelist len:'${#sizelist[@]}
 echo 'p2list len:'${#p2list[@]}
 echo 2 lists not equal,please check!
 echo $1
@@ -83,7 +83,7 @@ fi
 i='0'
 #while [[ $i -lt ${#torlinklist[@]} ]]
 #while [[ $i -lt ${#namelist[@]} ]]
-gettarget='true'
+gettarget='false'
 #set -x
 while [[ $i -lt ${#timelist[@]} ]]
 do
@@ -96,7 +96,8 @@ eeee=`echo -e '\u7E41'`
 echo ${namelist[i]} | grep -qP "[$aaaa$bbbb$cccc$dddd$eeee]"
 greprec=$?
 echo "greprec"$greprec
-echo ${namelist[i]} | grep -iq 'raws'
+#echo ${namelist[i]} | grep -iq 'raws'
+echo ${namelist[i]} | grep -iq 'raw'
 checkraw=$?
 echo "checkraw"$checkraw
 #seedcnt=`echo ${sizelist[i]}|awk -F "</td><td>" '{print $2}'|awk -F "</td>" '{print $1}'`
@@ -105,10 +106,24 @@ echo "checkraw"$checkraw
 if [[ ! $checkraw -eq 0 ]]
 then
 
-#	sizemb=`echo ${sizelist[i]}|awk '{print $1}'|awk -F '.' '{print $1}'|grep -oP '[0-9]+'`
-#	sizeunit=`echo ${sizelist[i]}|grep -oP '[A-Z]+'`
-#echo "size is " $sizemb
-#echo "unit is " $sizeunit
+	#sizemb=`echo ${sizelist[i]}|awk '{print $1}'|awk -F '.' '{print $1}'|grep -oP '[0-9]+'`
+	
+	sizemb=`echo ${sizelist[i]}|grep -oP '[0-9]+'`
+	sizemb=`echo $sizemb | awk '{print $1}'`
+	sizeunit=`echo ${sizelist[i]}|grep -oP '[A-Z]+'`
+	echo ${namelist[i]}'******'${p2list[i]}
+	epnum=`echo ${namelist[i]}|grep -ioP '(?<=[\[第【\s])[0-9_\.]+(?=[\]\[話话】\s])'| tr '\n' ' '`
+	echo 'epnum---------'$epnum
+echo "size is " $sizemb
+echo "unit is " $sizeunit
+echo "ep is" $epnum
+	if [[ $sizeunit == 'GB' && $sizemb -gt 2 ]]
+	then
+		echo "too large size, will continue"
+		i=`expr $i + 1`
+        	gettarget='false'
+		continue
+	fi
 #	if [[ $sizeunit -eq 'MB' && $sizemb -lt 55 ]]
 #	then
 #		echo "too small size, will continue"
@@ -117,9 +132,6 @@ then
 #	fi
 
 		#echo ${namelist[i]}'***'${sizelist[i]}'***'${p2list[i]}
-		echo ${namelist[i]}'******'${p2list[i]}
-	epnum=`echo ${namelist[i]}|grep -ioP '(?<=[\[第【\s])[0-9_\.]+(?=[\]\[話话】\s])'| tr '\n' ' '`
-	echo 'epnum---------'$epnum
 
 	if [[ ! -z "$epnum" && "$epnum" != '-' && "$epnum" != '' ]]
 	then
@@ -181,7 +193,7 @@ then
 		exit 404
 	fi
 	trackers=`cat trackers.txt`
-        aria2c -c -d "$downloadfolder/$keyw" --log="/tmp/$keyw.log" --log-level=notice --enable-color=false --enable-dht=true --enable-dht6=true --enable-peer-exchange=true --follow-metalink=mem --seed-time=30 --max-overall-upload-limit=50K --bt-tracker=$trackers "$list11p" 
+        aria2c -c -d "$downloadfolder/$keyw" --log="/tmp/$keyw.log" --log-level=notice --enable-color=false --enable-dht=true --enable-dht6=true --enable-peer-exchange=true --follow-metalink=mem --seed-time=10 --max-overall-upload-limit=50K --bt-tracker=$trackers "$list11p" 
 	#| tee "/tmp/$keyw.log"
 	recode=$?
 	if [[ $recode -eq 0 ]]
