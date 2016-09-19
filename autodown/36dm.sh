@@ -202,7 +202,7 @@ then
 		date | tee -a "/tmp/$keyw.log"
 		exit 0
 	else
-		echo "$keyw""_""$epnum not finished , interrupt when aria2c!!!" | tee -a "/tmp/$keyw.log"
+		echo "$keyw""_""$epnum not finished , interrupt when aria2c!!$recode!" | tee -a "/tmp/$keyw.log"
 		date | tee -a "/tmp/$keyw.log"
 		exit 1
 	fi
