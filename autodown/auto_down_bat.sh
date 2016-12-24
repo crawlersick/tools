@@ -52,7 +52,7 @@ i=0
 			i=`expr $i + 1`
 			continue
 		fi
-		36dm.sh "${namelist[i]}" &
+		./36dm.sh "${namelist[i]}" &
 		sleep 50
 		i=`expr $i + 1`
 	done

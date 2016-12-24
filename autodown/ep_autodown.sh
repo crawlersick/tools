@@ -10,7 +10,7 @@ i=0
 	while [[ $i -lt ${#namelist[@]} ]]
 	do
 		#kat_fetch.sh "${namelist[i]}" &
-		getfixsub.sh "${namelist[i]}" &
+		./getfixsub.sh "${namelist[i]}" &
                 sleep 13
 	i=`expr $i + 1`
 	done
