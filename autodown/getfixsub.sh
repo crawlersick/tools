@@ -29,7 +29,9 @@ pathc=`pwd`
 py3=`which python3`
 #maglink=`"$py3 "$pathc"/"$pyp "$keyw" "$downloadfolder/""kat_comp_list.txt"`
 maglink=`"$py3" $pathc"/"$pyp "$keyw" "$downloadfolder/""kat_comp_list.txt"`
-link=`echo $maglink|awk -F";;;"  '{print $1}'`
+IFS=';' read -r -a  larr <<< $maglink
+link=${larr[0]}
+epnum=${larr[1]}
 
 if [[ ! "$link" == 'None' ]]
 then
@@ -41,7 +43,6 @@ then
             exit 99
         fi
 
-	epnum=`echo $maglink|awk -F";;;"  '{print $2}'`
 	echo $link"--------"$epnum
         echo "$keyw""_""$epnum">> "$downloadfolder/""kat_comp_list.txt"
 else

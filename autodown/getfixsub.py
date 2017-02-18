@@ -34,4 +34,5 @@ if __name__=='__main__':
         else:
             break
         f.close()
-    print(maglink+';;;'+tagname)
+    maglink=maglink.replace('&amp;','&')
+    print(maglink+';'+tagname)
