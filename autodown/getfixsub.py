@@ -7,7 +7,7 @@ import sys
 import mmap
 
 if __name__=='__main__':
-    logging.basicConfig(level='INFO')
+    logging.basicConfig(level='DEBUG')
     keyw=sys.argv[1]
     filehist=sys.argv[2]
     logging.debug(keyw)
@@ -21,8 +21,10 @@ if __name__=='__main__':
     epname_encode=quote(epname)
     pageurl='http://www.fixsub.com/portfolio/'+epname_encode
     logging.debug(pageurl)
-    resu=ana(pageurl,'<div>(\w+).*?<a href="(magnet:\?xt=.*?)" target="_blank".*?</div>')
-    #logging.debug(resu)
+    resu=ana(pageurl,'<div>([0-9a-zA-Z]+).*?<a href="(magnet:\?xt=.*?)" target="_blank"')
+    logging.debug(resu)
+    maglink='None'
+    tagname='None'
     for tempobj in resu[::-1]:
         tagname=unquote(epname)+tempobj[0]
         maglink=tempobj[1]
@@ -30,9 +32,10 @@ if __name__=='__main__':
         logging.debug('maglink: '+maglink)
         if s.find(bytearray(tagname,'utf-8')) != -1:
             maglink='None'
-            continue
+            #continue
         else:
             break
         f.close()
-    maglink=maglink.replace('&amp;','&')
+    if(maglink!='None'):
+        maglink=maglink.replace('&amp;','&')
     print(maglink+';'+tagname)

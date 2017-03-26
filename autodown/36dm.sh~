@@ -149,8 +149,6 @@ echo "ep is" $epnum
                 gettarget='false'
                 continue
             else
-	    	echo "$keyw""_""$epnum"" is going to be download!"
-	    	echo "" > /tmp/process_"$keyw""_""$epnum"
                 gettarget='true'
             fi
 
