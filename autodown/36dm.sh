@@ -1,4 +1,5 @@
 #!/bin/bash
+#umask 011
 downloadfolder=$HOME'/Downloads'
 touch "$downloadfolder/autodownload.list"
 keyw=$1
@@ -93,6 +94,29 @@ bbbb=`echo -e '\u961F'`
 cccc=`echo -e '\u7EC4'`
 dddd=`echo -e '\u7B80'`
 eeee=`echo -e '\u7E41'`
+ffff=`echo -e '\u3010\u9884\u544A\u3011'`
+gggg=`echo -e '\u3010\u9810\u544A\u3011'`
+
+echo ${namelist[i]} | grep -q "$ffff"
+greprec=$?
+if [[ $greprec -eq 0 ]]
+then
+	echo 'prev1 found exit:'$ffff
+	i=`expr $i + 1`
+        gettarget='false'
+	continue
+fi
+echo ${namelist[i]} | grep -q "$gggg"
+greprec=$?
+if [[ $greprec -eq 0 ]]
+then
+	echo 'prev2 found exit:'$gggg
+	i=`expr $i + 1`
+        gettarget='false'
+	continue
+fi
+
+
 echo ${namelist[i]} | grep -qP "[$aaaa$bbbb$cccc$dddd$eeee]"
 greprec=$?
 echo "greprec"$greprec
@@ -115,7 +139,7 @@ then
 	sizemb=`echo $sizemb | awk '{print $1}'`
 	sizeunit=`echo ${sizelist[i]}|grep -oP '[A-Z]+'`
 	echo ${namelist[i]}'******'${p2list[i]}
-	epnum=`echo ${namelist[i]}|grep -ioP '(?<=[\[第【\s])[0-9_\.]+(?=[\]\[話话】\s])'| tr '\n' ' '`
+	epnum=`echo ${namelist[i]}|grep -ioP '(?<=[\[第【])[0-9_\.\(\)]+(?=[\]話话】])'| tr '\n' ' '`
 	echo 'epnum---------'$epnum
 echo "size is " $sizemb
 echo "unit is " $sizeunit

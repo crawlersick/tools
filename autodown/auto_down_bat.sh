@@ -7,13 +7,12 @@ else
 	thrcnt=10
 fi
 IFS=$'\r\n'
-namelist=($(cat auto_ani.list))
 
 time_s=`expr "3600" '*' "1"`
 
 while [[ true ]]
 do
-
+namelist=($(cat auto_ani.list))
 i=0
 	while [[ $i -lt ${#namelist[@]} ]]
 	do
@@ -33,7 +32,7 @@ i=0
 		then
 			ariapid=`ps -ef |grep aria2 | grep "$keyw"|tail -1| awk '{print $2}'`
 			runtime=`ps -p $ariapid -o etimes=`
-			if [[ $runtime -gt 8000 ]]
+			if [[ $runtime -gt 16000 ]]
 			then
 				echo "$keyw runtime $runtime , kill it now."
 				kill -SIGINT  $ariapid
@@ -57,5 +56,4 @@ i=0
 		i=`expr $i + 1`
 	done
 sleep $time_s
-namelist=($(cat auto_ani.list))
 done

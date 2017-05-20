@@ -21,7 +21,8 @@ if __name__=='__main__':
     epname_encode=quote(epname)
     pageurl='http://www.fixsub.com/portfolio/'+epname_encode
     logging.debug(pageurl)
-    resu=ana(pageurl,'<div>([0-9a-zA-Z]+).*?<a href="(magnet:\?xt=.*?)" target="_blank"')
+    #resu=ana(pageurl,'<div>([0-9a-zA-Z]+).*?<a href="(magnet:\?xt=.*?)" target="_blank"')
+    resu=ana(pageurl,'<div>([^\s]+).*?<a href="(magnet:\?xt=.*?)" target="_blank"')
     logging.debug(resu)
     maglink='None'
     tagname='None'
