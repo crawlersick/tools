@@ -96,6 +96,8 @@ dddd=`echo -e '\u7B80'`
 eeee=`echo -e '\u7E41'`
 ffff=`echo -e '\u3010\u9884\u544A\u3011'`
 gggg=`echo -e '\u3010\u9810\u544A\u3011'`
+#hhhh=`echo -e '\u82F1\u8BED\u5B57\u5E55'`
+hhhh=`echo -e '英语字幕'`
 
 echo ${namelist[i]} | grep -q "$ffff"
 greprec=$?
@@ -111,6 +113,15 @@ greprec=$?
 if [[ $greprec -eq 0 ]]
 then
 	echo 'prev2 found exit:'$gggg
+	i=`expr $i + 1`
+        gettarget='false'
+	continue
+fi
+echo ${namelist[i]} | grep -q "$hhhh"
+greprec=$?
+if [[ $greprec -eq 0 ]]
+then
+	echo 'prev3 found exit:'$hhhh
 	i=`expr $i + 1`
         gettarget='false'
 	continue
