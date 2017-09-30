@@ -227,7 +227,7 @@ then
 #	fi
 
 	mkdir -p "$downloadfolder/$keyw"
-	chmod -R 766 "$downloadfolder/$keyw"
+	chmod -R 777 "$downloadfolder/$keyw"
 	if [[ ! -f trackers.txt ]]
 	then
 		echo 'trackers.txt not found in current folder!'
