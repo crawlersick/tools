@@ -249,6 +249,7 @@ then
 	fi
 else
 	echo "$keyw not found in web page!"
+	chmod -R 777 "$downloadfolder/$keyw"
 fi
 
 date

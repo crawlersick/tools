@@ -12,6 +12,7 @@ time_s=`expr "3600" '*' "1"`
 
 while [[ true ]]
 do
+echo `date` >> /tmp/autodown.log
 namelist=($(cat auto_ani.list))
 i=0
 	while [[ $i -lt ${#namelist[@]} ]]
