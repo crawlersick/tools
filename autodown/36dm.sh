@@ -43,7 +43,16 @@ fi
 
 
 #set -x
+
+echo "$keyw start try.."
+
 textall=`curl -s --compressed -G --data-urlencode "keyword=$keyw" http://www.36dm.com/search.php|perl -p -e 's/\r//g'`
+while [[ $textall == *"WebShieldSessionVerify"* ]] || [[ $textall == *"sitedog_stat"* ]]
+do
+textall=`curl -s --compressed -G --data-urlencode "keyword=$keyw" http://www.36dm.com/search.php|perl -p -e 's/\r//g'`
+echo 'web verify hit, rep...., got length: '${#textall}
+sleep 1000
+done
 
 	re_code=$?
 	if [[ ! $re_code -eq 0 ]]
@@ -150,7 +159,7 @@ then
 	sizemb=`echo $sizemb | awk '{print $1}'`
 	sizeunit=`echo ${sizelist[i]}|grep -oP '[A-Z]+'`
 	echo ${namelist[i]}'******'${p2list[i]}
-	epnum=`echo ${namelist[i]}|grep -ioP '(?<=[\[第【])[0-9_\.\(\)]+(?=[\]話话】])'| tr '\n' ' '`
+	epnum=`echo ${namelist[i]}|grep -ioP '(?<=[\[集第【 ])[0-9_\.\(\)]+(?=[\]話话】 ])'| tr '\n' ' '`
 	echo 'epnum---------'$epnum
 echo "size is " $sizemb
 echo "unit is " $sizeunit
@@ -169,7 +178,7 @@ echo "ep is" $epnum
 #		continue
 #	fi
 
-		#echo ${namelist[i]}'***'${sizelist[i]}'***'${p2list[i]}
+echo ${namelist[i]}'***'${sizelist[i]}'***'${p2list[i]}
 
 	if [[ ! -z "$epnum" && "$epnum" != '-' && "$epnum" != '' ]]
 	then
@@ -208,6 +217,12 @@ fi
 #read asdlkfjasflkasjdf
 
 textall=`curl -s --compressed 'http://www.36dm.com/'"${p2list[i]}"|perl -p -e 's/\r//g'`
+while [[ $textall == *"WebShieldSessionVerify"* ]] || [[ $textall == *"sitedog_stat"* ]]
+do
+textall=`curl -s --compressed 'http://www.36dm.com/'"${p2list[i]}"|perl -p -e 's/\r//g'`
+echo 'web verify hit, rep...., got length: '${#textall}
+sleep 1000
+done
 exp11p=`sed -n 11p explist`
 list11p=`echo $textall | grep -oP "$exp11p"`       
 echo $list11p
