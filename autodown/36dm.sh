@@ -256,10 +256,12 @@ then
 	then
 		echo "$keyw""_""$epnum" >> "$downloadfolder/autodownload.list"
 		date | tee -a "/tmp/$keyw.log"
+	        chmod -R 777 "$downloadfolder/$keyw"
 		exit 0
 	else
 		echo "$keyw""_""$epnum not finished , interrupt when aria2c!!$recode!" | tee -a "/tmp/$keyw.log"
 		date | tee -a "/tmp/$keyw.log"
+	        chmod -R 777 "$downloadfolder/$keyw"
 		exit 1
 	fi
 else
