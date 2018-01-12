@@ -42,34 +42,30 @@ then
 fi
 
 
-#set -x
 
 echo "$keyw start try.."
 
-set -x
-textall=`curl  -H 'Accept-Encoding: gzip, deflate' -H 'Accept-Language: en-US,en;q=0.8,zh-CN;q=0.6,zh;q=0.4,zh-TW;q=0.2,ja;q=0.2' -H 'Upgrade-Insecure-Requests: 1' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.109 Safari/537.36' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8' -H 'Cache-Control: max-age=0' -H 'Cookie: a9736_times=1; __cfduid=db83c82b946a05cf3b280ab2522b166391515574699; cf_clearance=a10f0ec1a4e016678737296c7bd828aac4c1ef41-1515683740-1800; 8176=1; AJSTAT_ok_pages=2; AJSTAT_ok_times=2; __tins__6000273=%7B%22sid%22%3A%201515683900601%2C%20%22vd%22%3A%202%2C%20%22expires%22%3A%201515685740503%7D; __51cke__=; __51laig__=2; Hm_lvt_dfa59ae97c988b755b7dfc45bbf122ae=1515379378,1515485084,1515574704,1515646521; Hm_lpvt_dfa59ae97c988b755b7dfc45bbf122ae=1515683941' -s --compressed -G --data-urlencode "keyword=$keyw" http://www.36dm.com/search.php|perl -p -e 's/\r//g'`
-set +x
-while [[ $textall == *"WebShieldSessionVerify"* ]] || [[ $textall == *"sitedog_stat"* ]]
-do
-textall=`curl -s --compressed -G --data-urlencode "keyword=$keyw" http://www.36dm.com/search.php|perl -p -e 's/\r//g'`
-echo 'web verify hit, rep...., got length: '${#textall}
-sleep 1000
-done
-
+#textall=`curl  -s --compressed -G --data-urlencode "term=$keyw" https://acg.rip/|perl -p -e 's/\r//g'`
+if [[ ! -f /tmp/acgripinfo.txt ]]
+then
+	curl  --compressed -G https://acg.rip > /tmp/acgripinfo.txt
 	re_code=$?
 	if [[ ! $re_code -eq 0 ]]
 		then
-		echo "$keyw""_""Network to 36dm error, pls check the connection!"
+		echo "$keyw""_""Network error, pls check the connection!"
 		date
 		exit 2
 	fi
-exp9p=`sed -n 9p explist`
+fi
+textall=`cat /tmp/acgripinfo.txt`
+
+exp9p=`sed -n 2p explist_acgrip`
 list9p=`echo $textall | grep -aoP "$exp9p"`       
-exp10p=`sed -n 10p explist`
+exp10p=`sed -n 4p explist_acgrip`
 list10p=`echo $textall | grep -aoP "$exp10p"`       
-exp8p=`sed -n 8p explist`
+exp8p=`sed -n 6p explist_acgrip`
 list8p=`echo $textall | grep -aoP "$exp8p"`       
-exp13p=`sed -n 13p explist`
+exp13p=`sed -n 8p explist_acgrip`
 list13p=`echo $textall | grep -aoP "$exp13p"`       
 ifsbk=$IFS
 IFS=$'\r\n'
@@ -82,12 +78,19 @@ echo ${#namelist[@]}
 echo ${#sizelist[@]}
 echo ${#p2list[@]}
 echo ${#timelist[@]}
-#if [[ ! ${#namelist[@]} == ${#sizelist[@]} || ! ${#sizelist[@]} == ${#p2list[@]} ]]
-if [[ ! ${#namelist[@]} == ${#p2list[@]} ]]
+
+#echo ${namelist[2]}
+#echo ${sizelist[2]}
+#echo ${p2list[2]}
+#echo ${timelist[2]}
+
+
+if [[ ! ${#namelist[@]} == ${#sizelist[@]} || ! ${#sizelist[@]} == ${#p2list[@]} ]]
 then
 echo 'namelist len:'${#namelist[@]}
 echo 'sizelist len:'${#sizelist[@]}
 echo 'p2list len:'${#p2list[@]}
+echo 'timelist len:'${#timelist[@]}
 echo 2 lists not equal,please check!
 echo $1
 exit
@@ -96,10 +99,21 @@ i='0'
 #while [[ $i -lt ${#torlinklist[@]} ]]
 #while [[ $i -lt ${#namelist[@]} ]]
 gettarget='false'
-#set -x
 while [[ $i -lt ${#timelist[@]} ]]
 do
-echo ${namelist[i]}'***'${sizelist[i]}'***'${torlinklist[i]}'***'${dpagelist[i]}
+
+#if [[ ! ${namelist[i]} == *"$keyw"* ]]
+if echo ${namelist[i]} | grep -iqF "$keyw"
+then
+	echo "word $keyw is found for item ${namelist[i]}, continue..."
+else
+	echo "word $keyw not found for item ${namelist[i]}, continue..."
+	i=`expr $i + 1`
+        gettarget='false'
+	continue
+fi
+
+echo ${namelist[i]}'***'${sizelist[i]}'***'${p2list[i]}'***'${timelist[i]}
 aaaa=`echo -e '\u5B57'`
 bbbb=`echo -e '\u961F'`
 cccc=`echo -e '\u7EC4'`
@@ -107,7 +121,6 @@ dddd=`echo -e '\u7B80'`
 eeee=`echo -e '\u7E41'`
 ffff=`echo -e '\u3010\u9884\u544A\u3011'`
 gggg=`echo -e '\u3010\u9810\u544A\u3011'`
-#hhhh=`echo -e '\u82F1\u8BED\u5B57\u5E55'`
 hhhh=`echo -e '英语字幕'`
 
 echo ${namelist[i]} | grep -q "$ffff"
@@ -218,15 +231,7 @@ then
 fi
 #read asdlkfjasflkasjdf
 
-textall=`curl  -H 'Accept-Encoding: gzip, deflate' -H 'Accept-Language: en-US,en;q=0.8,zh-CN;q=0.6,zh;q=0.4,zh-TW;q=0.2,ja;q=0.2' -H 'Upgrade-Insecure-Requests: 1' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.109 Safari/537.36' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8' -H 'Cache-Control: max-age=0' -H 'Cookie: a9736_times=1; __cfduid=db83c82b946a05cf3b280ab2522b166391515574699; cf_clearance=a10f0ec1a4e016678737296c7bd828aac4c1ef41-1515683740-1800; 8176=1; AJSTAT_ok_pages=2; AJSTAT_ok_times=2; __tins__6000273=%7B%22sid%22%3A%201515683900601%2C%20%22vd%22%3A%202%2C%20%22expires%22%3A%201515685740503%7D; __51cke__=; __51laig__=2; Hm_lvt_dfa59ae97c988b755b7dfc45bbf122ae=1515379378,1515485084,1515574704,1515646521; Hm_lpvt_dfa59ae97c988b755b7dfc45bbf122ae=1515683941' -s --compressed 'http://www.36dm.com/'"${p2list[i]}"|perl -p -e 's/\r//g'`
-while [[ $textall == *"WebShieldSessionVerify"* ]] || [[ $textall == *"sitedog_stat"* ]]
-do
-textall=`curl -s --compressed 'http://www.36dm.com/'"${p2list[i]}"|perl -p -e 's/\r//g'`
-echo 'web verify hit, rep...., got length: '${#textall}
-sleep 1000
-done
-exp11p=`sed -n 11p explist`
-list11p=`echo $textall | grep -oP "$exp11p"`       
+list11p="https://acg.rip"${p2list[i]}      
 echo $list11p
 echo $i
 echo 'begin download!'echo $list11p

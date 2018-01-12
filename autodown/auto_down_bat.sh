@@ -10,9 +10,19 @@ IFS=$'\r\n'
 
 time_s=`expr "3600" '*' "1"`
 
+
+
 while [[ true ]]
 do
-echo `date` >> /tmp/autodown.log
+
+rm -rf /tmp/acgripinfo.txt
+if [[ -f /tmp/acgripinfo.txt ]]
+then
+echo "unable rm /tmp/acgripinfo.txt....."`date` >> /tmp/autodown.log
+exit
+fi
+echo "start loop....."`date` >> /tmp/autodown.log
+
 namelist=($(cat auto_ani.list))
 i=0
 	while [[ $i -lt ${#namelist[@]} ]]
@@ -52,7 +62,7 @@ i=0
 			i=`expr $i + 1`
 			continue
 		fi
-		./36dm.sh "${namelist[i]}" &
+		./acgrip2.sh "${namelist[i]}" &
 		sleep 50
 		i=`expr $i + 1`
 	done
