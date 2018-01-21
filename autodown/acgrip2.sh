@@ -113,6 +113,12 @@ else
 	continue
 fi
 
+
+t=${namelist[i]}
+for a in "c-a Raws"; do t=${t//$a/""};echo $t; done
+namelist[$i]=$t
+
+
 echo ${namelist[i]}'***'${sizelist[i]}'***'${p2list[i]}'***'${timelist[i]}
 aaaa=`echo -e '\u5B57'`
 bbbb=`echo -e '\u961F'`
@@ -175,6 +181,12 @@ then
 	sizeunit=`echo ${sizelist[i]}|grep -oP '[A-Z]+'`
 	echo ${namelist[i]}'******'${p2list[i]}
 	epnum=`echo ${namelist[i]}|grep -ioP '(?<=[\[集第【 ])[0-9_\.\(\)]+(?=[\]話话】 ])'| tr '\n' ' '`
+	if [[ -z "$epnum" ]]
+	then
+		echo "2nd name grep ${namelist[i]}"
+		epnum=`echo ${namelist[i]}|grep -ioP '(?<=[^0-9a-zA-Z])[0-9_\.\(\)]+(?=[\]話话】 ])'| tr '\n' ' '`
+		echo "2nd epnum: " $epnum
+	fi
 	echo 'epnum---------'$epnum
 echo "size is " $sizemb
 echo "unit is " $sizeunit
@@ -262,18 +274,19 @@ then
 	if [[ $recode -eq 0 ]]
 	then
 		echo "$keyw""_""$epnum" >> "$downloadfolder/autodownload.list"
-		date | tee -a "/tmp/$keyw.log"
-	        chmod -R 777 "$downloadfolder/$keyw"
-		exit 0
 	else
 		echo "$keyw""_""$epnum not finished , interrupt when aria2c!!$recode!" | tee -a "/tmp/$keyw.log"
-		date | tee -a "/tmp/$keyw.log"
-	        chmod -R 777 "$downloadfolder/$keyw"
-		exit 1
 	fi
+	date | tee -a "/tmp/$keyw.log"
+        chmod -R 777 "$downloadfolder/$keyw"
+	IFSBK=$IFS
+	IFS=$'\r\n'
+        cd "$downloadfolder/$keyw"
+	rm *.torrent
+	IFS=$IFSBK
+
 else
 	echo "$keyw not found in web page!"
-	chmod -R 777 "$downloadfolder/$keyw"
 fi
 
 date
