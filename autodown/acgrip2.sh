@@ -52,6 +52,7 @@ then
 	re_code=$?
 	if [[ ! $re_code -eq 0 ]]
 		then
+		rm /tmp/acgripinfo.txt
 		echo "$keyw""_""Network error, pls check the connection!"
 		date
 		exit 2
