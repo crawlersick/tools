@@ -104,7 +104,9 @@ while [[ $i -lt ${#timelist[@]} ]]
 do
 
 #if [[ ! ${namelist[i]} == *"$keyw"* ]]
-if echo ${namelist[i]} | grep -iqF "$keyw"
+echo ${namelist[i]} | grep -iq "$keyw"
+recode=$?
+if [[ $recode -eq 0 ]]
 then
 	echo "word $keyw is found for item ${namelist[i]}, continue..."
 else
@@ -113,7 +115,6 @@ else
         gettarget='false'
 	continue
 fi
-
 
 t=${namelist[i]}
 for a in "c-a Raws"; do t=${t//$a/""};echo $t; done
