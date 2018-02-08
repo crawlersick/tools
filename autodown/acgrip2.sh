@@ -193,7 +193,7 @@ then
     if [[ -z "$epnum" ]]
     then
         echo "2nd name grep ${namelist[i]}"
-        epnum=`echo ${namelist[i]}|grep -ioP '(?<=[^0-9a-zA-Z])[0-9_\.\(\)]+(?=[\]話话】 ]vV)'| tr '\n' ' '`
+        epnum=`echo ${namelist[i]}|grep -ioP '(?<=[^0-9a-zA-Z])[0-9_\.\(\)]+(?=[\]話话】 Vv])'| tr '\n' ' '`
         echo "2nd epnum: " $epnum
     fi
     echo 'epnum---------'$epnum
