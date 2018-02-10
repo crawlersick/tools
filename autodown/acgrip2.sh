@@ -200,7 +200,7 @@ then
 echo "size is " $sizemb
 echo "unit is " $sizeunit
 echo "ep is" $epnum
-    if [[ $sizeunit == 'GB' && $sizemb -gt 2 ]]
+    if [[ $sizeunit == 'GB' && $sizemb -gt 1 ]]
     then
         echo "too large size, will continue"
         i=`expr $i + 1`
