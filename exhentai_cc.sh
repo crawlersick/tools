@@ -2,9 +2,17 @@
 set -x
 if [ -z "$1" ] 
 then
-echo error para
+echo error para1
 exit 1
 fi
+
+if [ -z "$2" ] 
+then
+echo error para2
+exit 1
+fi
+
+targetdir="$2"
 
 targetmanga="$1"
 ipb_pass_hash=X
@@ -19,7 +27,7 @@ stringforpage1=`curl $targetmanga -H 'Host: exhentai.org' -H 'User-Agent: Mozill
 
 #get manga title like <title>XXX</title>
 mangatitle=`echo $stringforpage1 | grep -oP '(?<=<title>).*?(?=</title>)'`
-mkdir "temp/""$mangatitle"
+mkdir "$targetdir/""$mangatitle"
 
 #get pages info
 
@@ -28,7 +36,7 @@ do
 :
 done
 pagemax=`echo $tempval | grep -oP '(?<=false"\>)[0-9]+'`
-flist="temp/""$mangatitle""/failedlist"
+flist="$targetdir/""$mangatitle""/failedlist"
 
 function imagehandle {
 entryurl=$1
@@ -44,7 +52,7 @@ else
 filename=`echo $imgurl |awk -F'/' '{print $NF}'`
 fi
 
-fullfilepath="temp/""$mangatitle""/""$filename"
+fullfilepath="$targetdir/""$mangatitle""/""$filename"
 if [[ -f "$fullfilepath" ]]
 then
 :
@@ -102,7 +110,7 @@ do
     for a in $lv3url
     do
     
-    if [[ -f "temp/""$mangatitle""/stop" ]]
+    if [[ -f "$targetdir/""$mangatitle""/stop" ]]
     then
         kdialog --sorry  "force stop!"
         exit 9
