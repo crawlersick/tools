@@ -161,7 +161,7 @@ then
 	sizemb=`echo $sizemb | awk '{print $1}'`
 	sizeunit=`echo ${sizelist[i]}|grep -oP '[A-Z]+'`
 	echo ${namelist[i]}'******'${p2list[i]}
-	epnum=`echo ${namelist[i]}|grep -ioP '(?<=[\[集第【 ])[0-9_\.\(\)]+(?=[\]話话】 ])'| tr '\n' ' '`
+	epnum=`echo ${namelist[i]}|grep -ioP '(?<=[\[集第【 ])[0-9_\.\(\)-]+(?=[\]話话】 ])'| tr '\n' ' '`
 	echo 'epnum---------'$epnum
 echo "size is " $sizemb
 echo "unit is " $sizeunit
