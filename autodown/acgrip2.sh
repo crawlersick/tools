@@ -124,7 +124,7 @@ else
 fi
 
 t=${namelist[i]}
-for a in "c-a Raws"; do t=${t//$a/""};echo $t; done
+for a in "c-a Raws" "_ 2018"; do t=${t//$a/""};echo $t; done
 namelist[$i]=$t
 
 
@@ -189,7 +189,7 @@ then
     sizemb=`echo $sizemb | awk '{print $1}'`
     sizeunit=`echo ${sizelist[i]}|grep -oP '[A-Z]+'`
     echo ${namelist[i]}'******'${p2list[i]}
-    epnum=`echo ${namelist[i]}|grep -ioP '(?<=[\[集第【 ])[0-9_\.\(\)]+(?=[\]話集话】 ])'| tr '\n' ' '`
+    epnum=`echo ${namelist[i]}|grep -ioP '(?<=[\[集第【 「])[0-9_\.\(\)]+(?=[\]話集话】 」])'| tr '\n' ' '`
     if [[ -z "$epnum" ]]
     then
         echo "2nd name grep ${namelist[i]}"
