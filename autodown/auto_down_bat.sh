@@ -1,4 +1,17 @@
 #!/bin/bash
+if [[ -f /tmp/autodown.log ]]
+then
+echo "found /tmp/autodown.log, maybe duplicated process? exit now....." >> /tmp/autodown.log
+exit
+fi
+
+function finish {
+	rm -rf /tmp/autodown.log
+}
+
+trap finish EXIT
+trap finish ERR
+
 arc=`uname -m|cut -c 1-3`
 if [[ $arc == 'arm' ]]
 then
@@ -63,7 +76,7 @@ i=0
 			continue
 		fi
 		./acgrip2.sh "${namelist[i]}" &
-		sleep 50
+		#sleep 50
 		i=`expr $i + 1`
 	done
 sleep $time_s

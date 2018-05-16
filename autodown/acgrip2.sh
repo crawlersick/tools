@@ -196,6 +196,11 @@ then
         epnum=`echo ${namelist[i]}|grep -ioP '(?<=[^0-9a-zA-Z])[0-9_\.\(\)]+(?=[\]話话】 Vv])'| tr '\n' ' '`
         echo "2nd epnum: " $epnum
     fi
+    for temp_epnum in $epnum
+    do
+	    echo 'pass '$temp_epnum
+    done
+    epnum=$temp_epnum
     echo 'epnum---------'$epnum
 echo "size is " $sizemb
 echo "unit is " $sizeunit
