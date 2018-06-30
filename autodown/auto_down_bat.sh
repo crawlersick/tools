@@ -72,11 +72,11 @@ i=0
 		then
 			echo 'aria2c thr greater then '$thrcnt' , continue'
 			sleep 900
-			i=`expr $i + 1`
+		#	i=`expr $i + 1`
 			continue
 		fi
 		./acgrip2.sh "${namelist[i]}" &
-		#sleep 50
+		sleep 10
 		i=`expr $i + 1`
 	done
 sleep $time_s
