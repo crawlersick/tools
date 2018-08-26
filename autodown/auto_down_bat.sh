@@ -21,7 +21,7 @@ else
 fi
 IFS=$'\r\n'
 
-time_s=`expr "3600" '*' "1"`
+time_s=`expr "1000" '*' "1"`
 
 
 
@@ -76,7 +76,7 @@ i=0
 			continue
 		fi
 		./acgrip2.sh "${namelist[i]}" &
-		sleep 10
+		sleep 1
 		i=`expr $i + 1`
 	done
 sleep $time_s
