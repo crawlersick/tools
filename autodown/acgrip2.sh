@@ -48,7 +48,7 @@ echo "$keyw start try.."
 #textall=`curl  -s --compressed -G --data-urlencode "term=$keyw" https://acg.rip/|perl -p -e 's/\r//g'`
 if [[ ! -f /tmp/acgripinfo.txt ]]
 then
-    curl  --compressed -G https://acg.rip > /tmp/acgripinfo.txt
+    curl  --insecure --compressed -G https://acg.rip > /tmp/acgripinfo.txt
     re_code=$?
     if [[ ! $re_code -eq 0 ]]
         then
@@ -282,7 +282,8 @@ then
         exit 404
     fi
     trackers=`cat trackers.txt`
-        aria2c -c -d "$downloadfolder/$keyw" --log="/tmp/$keyw.log" --log-level=notice --enable-color=false --enable-dht=true --enable-dht6=true --enable-peer-exchange=true --follow-metalink=mem --seed-time=10 --max-overall-upload-limit=50K --bt-tracker=$trackers "$list11p" 
+    curl --insecure  "$list11p" --output "$downloadfolder/$keyw"/temp.torrent
+        aria2c -c -d "$downloadfolder/$keyw" --log="/tmp/$keyw.log" --log-level=notice --enable-color=false --enable-dht=true --enable-dht6=true --enable-peer-exchange=true --follow-metalink=mem --seed-time=10 --max-overall-upload-limit=50K --bt-tracker=$trackers "$downloadfolder/$keyw"/temp.torrent
     #| tee "/tmp/$keyw.log"
     recode=$?
     if [[ $recode -eq 0 ]]
