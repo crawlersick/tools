@@ -48,7 +48,9 @@ echo "$keyw start try.."
 #textall=`curl  -s --compressed -G --data-urlencode "term=$keyw" https://acg.rip/|perl -p -e 's/\r//g'`
 if [[ ! -f /tmp/acgripinfo.txt ]]
 then
-    curl  --insecure --compressed -G https://acg.rip > /tmp/acgripinfo.txt
+    #curl  --insecure --compressed -G https://acg.rip > /tmp/acgripinfo.txt
+    encurl=`./callenc.sh 'https://acg.rip/'`
+    curl -X POST -d "{\"keyl\":\"$encurl\"}" http://176.56.237.58:8000 | base64 -d > /tmp/acgripinfo.txt
     re_code=$?
     if [[ ! $re_code -eq 0 ]]
         then
@@ -282,7 +284,10 @@ then
         exit 404
     fi
     trackers=`cat trackers.txt`
-    curl --insecure  "$list11p" --output "$downloadfolder/$keyw"/temp.torrent
+    #curl --insecure  "$list11p" --output "$downloadfolder/$keyw"/temp.torrent
+    encurl=`./callenc.sh "$list11p"`
+    curl -X POST -d "{\"keyl\":\"$encurl\"}" http://176.56.237.58:8000 -o "$downloadfolder/$keyw"/temp.torrent.txt
+    base64 -d "$downloadfolder/$keyw"/temp.torrent.txt > "$downloadfolder/$keyw"/temp.torrent
         aria2c -c -d "$downloadfolder/$keyw" --log="/tmp/$keyw.log" --log-level=notice --enable-color=false --enable-dht=true --enable-dht6=true --enable-peer-exchange=true --follow-metalink=mem --seed-time=10 --max-overall-upload-limit=50K --bt-tracker=$trackers "$downloadfolder/$keyw"/temp.torrent
     #| tee "/tmp/$keyw.log"
     recode=$?
@@ -298,6 +303,7 @@ then
     IFS=$'\r\n'
         cd "$downloadfolder/$keyw"
     rm *.torrent
+    rm *.torrent.txt
     IFS=$IFSBK
 
 else
