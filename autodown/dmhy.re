@@ -1,0 +1,1 @@
+href=\"\/topics\/list\/team_id\/.*?>\s+(.*?)<\/a><\/span>.*?target=\"_blank\" >\s+(.*?)<\/a>.*?<td nowrap=\"nowrap\" align=\"center\"><a class=\"download-arrow arrow-magnet\" title=\"磁力下載\" href=\"(.*?)\">
