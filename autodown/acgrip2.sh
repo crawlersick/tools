@@ -172,9 +172,8 @@ fi
 echo ${namelist[i]} | grep -qP "[$aaaa$bbbb$cccc$dddd$eeee]"
 greprec=$?
 echo "greprec"$greprec
-#echo ${namelist[i]} | grep -iq 'raws'
-echo ${namelist[i]} | grep -iq 'raw'
-checkraw=$?
+#echo ${namelist[i]} | grep -iq 'raw'
+#checkraw=$?
 echo ${namelist[i]} | grep -iq 'prev'
 checkprev=$?
 echo "checkprev"$checkprev
@@ -182,7 +181,8 @@ echo "checkraw"$checkraw
 #seedcnt=`echo ${sizelist[i]}|awk -F "</td><td>" '{print $2}'|awk -F "</td>" '{print $1}'`
 #if [[ $seedcnt -gt $seedw && $greprec -eq 0 ]]
 #if [[ $greprec -eq 0 && ! $checkraw -eq 0 ]]
-if [[ ! $checkraw -eq 0 && ! $checkprev -eq 0 ]]
+#if [[ ! $checkraw -eq 0 && ! $checkprev -eq 0 ]]
+if [[ ! $checkprev -eq 0 ]]
 then
 
     #sizemb=`echo ${sizelist[i]}|awk '{print $1}'|awk -F '.' '{print $1}'|grep -oP '[0-9]+'`
