@@ -31,10 +31,22 @@ do
 rm -rf /tmp/acgripinfo.txt
 if [[ -f /tmp/acgripinfo.txt ]]
 then
-echo "unable rm /tmp/acgripinfo.txt....."`date` >> /tmp/autodown.log
+echo "unable rm /tmp/acgripinfo.txt....."`date` | tee /tmp/autodown.log
 exit
 fi
 echo "start loop....."`date` >> /tmp/autodown.log
+
+encurl=`./callenc.sh 'https://acg.rip/'`
+curl -X POST -d "{\"keyl\":\"$encurl\"}" http://176.56.237.58:8000 | base64 -d > /tmp/acgripinfo.txt
+re_code=$?
+if [[ ! $re_code -eq 0 ]]
+then
+    rm /tmp/acgripinfo.txt
+    echo "Network error, pls check the connection!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    date
+    fi
+
+
 
 namelist=($(cat auto_ani.list))
 i=0

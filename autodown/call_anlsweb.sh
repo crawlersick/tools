@@ -1,3 +1,5 @@
+sqlite3 $HOME/Downloads/epdb.db < init.sql
+initoutput=".separator '||-||' '##-##'"
 search_str=$1
 if [[ -z "$search_str" ]]
 then
@@ -33,6 +35,15 @@ do
         re_code=$?
         if [[ $re_code -eq 0 ]]
         then
+            ifdone=`sqlite3 ~/Downloads/epdb.db << EOF
+$initoutput
+select * from loglist where epname="$search_str" and epnum="$epnum";
+EOF`
+            if [[ ! -z $ifdone ]]
+	    then
+                echo "found $search_str  ---   $epnum done in db"
+                continue 
+	    fi
             echo "found $name  ---   $epnum"
 	    if [[ ! -d "$HOME/Downloads/$search_str" ]]
 	    then
@@ -41,7 +52,10 @@ do
 	    fi
             trackers=`cat trackers.txt`
             aria2c -c -d "$HOME/Downloads/$search_str" --log="/tmp/$search_str.log" --log-level=notice --enable-color=false --enable-dht=true --enable-dht6=true --enable-peer-exchange=true --follow-metalink=mem --seed-time=10 --max-overall-upload-limit=50K --bt-tracker=$trackers $mag
-	    chmod -R 777 "$HOME/Downloads/$search_str/*"
+	    chmod -R 777 "$HOME/Downloads/$search_str"
+            sqlite3 $HOME/Downloads/epdb.db << EOF
+insert into loglist values ("$search_str","$epnum");
+EOF
             exit 0
         fi
     fi

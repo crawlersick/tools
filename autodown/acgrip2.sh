@@ -288,7 +288,7 @@ then
     encurl=`./callenc.sh "$list11p"`
     curl -X POST -d "{\"keyl\":\"$encurl\"}" http://176.56.237.58:8000 -o "$downloadfolder/$keyw"/temp.torrent.txt
     base64 -d "$downloadfolder/$keyw"/temp.torrent.txt > "$downloadfolder/$keyw"/temp.torrent
-        aria2c -c -d "$downloadfolder/$keyw" --log="/tmp/$keyw.log" --log-level=notice --enable-color=false --enable-dht=true --enable-dht6=true --enable-peer-exchange=true --follow-metalink=mem --seed-time=10 --max-overall-upload-limit=50K --bt-tracker=$trackers "$downloadfolder/$keyw"/temp.torrent
+        aria2c -c -d "$downloadfolder/$keyw" --allow-overwrite=true --log="/tmp/$keyw.log" --log-level=notice --enable-color=false --enable-dht=true --enable-dht6=true --enable-peer-exchange=true --follow-metalink=mem --seed-time=10 --max-overall-upload-limit=50K --bt-tracker=$trackers "$downloadfolder/$keyw"/temp.torrent
     #| tee "/tmp/$keyw.log"
     recode=$?
     if [[ $recode -eq 0 ]]
