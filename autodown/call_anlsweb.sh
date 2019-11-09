@@ -6,8 +6,12 @@ then
     echo "need input search string!!!"
     exit 0
 fi
+
 list=/tmp/eps.list
-anlsweb.sh 'http://share.dmhy.org/' 'dmhy.re' > $list
+if [[ ! -f $list ]]
+then
+    anlsweb.sh 'http://share.dmhy.org/' 'dmhy.re' > $list
+fi
 while read -r line
 do
 	mag=`echo $line |perl -ne 'print $3 if /(.*?)\|\|\|\|--\^\^--\|\|\|\|(.*?)\|\|\|\|--\^\^--\|\|\|\|(.*)/s'`
@@ -31,8 +35,23 @@ do
     echo $epnum
     if [[ ! -z "$epnum" ]]
     then
-        echo "$name" | grep -iq "$search_str"
-        re_code=$?
+        re_code=1
+	IFSBK=$IFS
+        IFS=";"
+	read -ra ADDR <<< "$search_str"
+	for tempkeyw in "${ADDR[@]}"
+	do
+		echo "$name" | grep -iq "$tempkeyw"
+		re_code=$?
+                if [[ $re_code -eq 0 ]]
+		then
+			break
+		fi
+	done
+
+        #echo "$name" | grep -iq "$search_str"
+        #re_code=$?
+
         if [[ $re_code -eq 0 ]]
         then
             ifdone=`sqlite3 ~/Downloads/epdb.db << EOF

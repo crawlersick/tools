@@ -1,7 +1,7 @@
 #!/bin/bash
 if [[ -f /tmp/autodown.log ]]
 then
-echo "found /tmp/autodown.log, maybe duplicated process? exit now....." >> /tmp/autodown.log
+echo "found /tmp/autodown.log, maybe duplicated process? exit now....." |tee /tmp/autodown.log
 exit
 fi
 
@@ -23,28 +23,32 @@ IFS=$'\r\n'
 
 time_s=`expr "1000" '*' "1"`
 
-
+templist='/tmp/eps.list'
 
 while [[ true ]]
 do
 
-rm -rf /tmp/acgripinfo.txt
-if [[ -f /tmp/acgripinfo.txt ]]
+#rm -rf /tmp/acgripinfo.txt
+rm -rf $templist
+#if [[ -f /tmp/acgripinfo.txt ]]
+if [[ -f $templist ]]
 then
-echo "unable rm /tmp/acgripinfo.txt....."`date` | tee /tmp/autodown.log
+echo "unable rm $templist....."`date` | tee /tmp/autodown.log
 exit
 fi
-echo "start loop....."`date` >> /tmp/autodown.log
+echo "start loop....."`date` | tee /tmp/autodown.log
 
-encurl=`./callenc.sh 'https://acg.rip/'`
-curl -X POST -d "{\"keyl\":\"$encurl\"}" http://176.56.237.58:8000 | base64 -d > /tmp/acgripinfo.txt
+#encurl=`./callenc.sh 'https://acg.rip/'`
+#curl -X POST -d "{\"keyl\":\"$encurl\"}" http://176.56.237.58:8000 | base64 -d > /tmp/acgripinfo.txt
+anlsweb.sh 'http://share.dmhy.org/' 'dmhy.re' > /tmp/eps.list
 re_code=$?
 if [[ ! $re_code -eq 0 ]]
 then
-    rm /tmp/acgripinfo.txt
+    #rm /tmp/acgripinfo.txt
+    rm /tmp/eps.list
     echo "Network error, pls check the connection!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
     date
-    fi
+fi
 
 
 
@@ -87,7 +91,8 @@ i=0
 		#	i=`expr $i + 1`
 			continue
 		fi
-		./acgrip2.sh "${namelist[i]}" &
+		#./acgrip2.sh "${namelist[i]}" &
+		./call_anlsweb.sh "${namelist[i]}" &
 		sleep 1
 		i=`expr $i + 1`
 	done
