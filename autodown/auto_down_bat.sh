@@ -40,7 +40,7 @@ echo "start loop....."`date` | tee /tmp/autodown.log
 
 #encurl=`./callenc.sh 'https://acg.rip/'`
 #curl -X POST -d "{\"keyl\":\"$encurl\"}" http://176.56.237.58:8000 | base64 -d > /tmp/acgripinfo.txt
-anlsweb.sh 'http://share.dmhy.org/' 'dmhy.re' > /tmp/eps.list
+./anlsweb.sh 'http://share.dmhy.org/' 'dmhy.re' > /tmp/eps.list
 re_code=$?
 if [[ ! $re_code -eq 0 ]]
 then

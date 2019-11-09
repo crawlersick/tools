@@ -10,7 +10,7 @@ fi
 list=/tmp/eps.list
 if [[ ! -f $list ]]
 then
-    anlsweb.sh 'http://share.dmhy.org/' 'dmhy.re' > $list
+    ./anlsweb.sh 'http://share.dmhy.org/' 'dmhy.re' > $list
 fi
 while read -r line
 do
@@ -48,6 +48,7 @@ do
 			break
 		fi
 	done
+	IFS=$IFSBK
 
         #echo "$name" | grep -iq "$search_str"
         #re_code=$?
