@@ -92,8 +92,8 @@ i=0
 			continue
 		fi
 		#./acgrip2.sh "${namelist[i]}" &
-		./call_anlsweb.sh "${namelist[i]}" 
-		sleep 1
+		./call_anlsweb.sh "${namelist[i]}"  &
+		sleep 10
 		i=`expr $i + 1`
 	done
 sleep $time_s

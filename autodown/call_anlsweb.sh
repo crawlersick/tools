@@ -12,6 +12,7 @@ if [[ ! -f $list ]]
 then
     ./anlsweb.sh 'http://share.dmhy.org/' 'dmhy.re' > $list
 fi
+echo '>>>>>>>>>>>>>>>>>>>>>search for :'$search_str
 while read -r line
 do
 	mag=`echo $line |perl -ne 'print $3 if /(.*?)\|\|\|\|--\^\^--\|\|\|\|(.*?)\|\|\|\|--\^\^--\|\|\|\|(.*)/s'`
@@ -20,19 +21,22 @@ do
 
 	#echo 'mag'
 	#echo $mag
-	echo '-0--------------------------------'
-	echo 'name'
-	echo $name
-	echo 'group'
-	echo $group
+	#echo '-0--------------------------------'
+	#echo 'name'
+	#echo $name
+	#echo 'group'
+	#echo $group
 	epnum=`echo ${name}|grep -ioP '(?<=[^0-9a-zA-Z])[0-9_\.\(\)]+(?=[\]話话】 Vv章])'| tr '\n' ' '`
 	if [[ -z "$epnum" ]]
 	then
-            echo 'try match epnum as EP'
+            #echo 'try match epnum as EP'
             epnum=`echo ${name}|grep -ioP '(?<=EP)[0-9_\.\(\)]+(?=[ \[])'| tr '\n' ' '`
 	fi
-    echo 'epnum:'
-    echo $epnum
+	if [[ -z "$epnum" ]]
+	then
+            #echo 'try match epnum as AB subfix'
+	    epnum=`echo ${name}|grep -ioP '(?<=[^0-9a-zA-Z])[0-9_\.\(\)]+[AB](?=[\]話话】 Vv章])'| tr '\n' ' '`
+	fi
     if [[ ! -z "$epnum" ]]
     then
         re_code=1
@@ -55,6 +59,8 @@ do
 
         if [[ $re_code -eq 0 ]]
         then
+            echo 'epnum:'
+            echo $epnum
             ifdone=`sqlite3 ~/Downloads/epdb.db << EOF
 $initoutput
 select * from loglist where epname="$search_str" and epnum="$epnum";
