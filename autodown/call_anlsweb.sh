@@ -59,6 +59,7 @@ do
 
         if [[ $re_code -eq 0 ]]
         then
+	    epnum=echo $epnum | xargs
             echo 'epnum:'
             echo $epnum
             ifdone=`sqlite3 ~/Downloads/epdb.db << EOF
