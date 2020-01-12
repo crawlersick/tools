@@ -27,6 +27,7 @@ do
 	#echo 'group'
 	#echo $group
 	epnum=`echo ${name}|grep -ioP '(?<=[^0-9a-zA-Z])[0-9_\.\(\)]+(?=[\]話话】 Vv章])'| tr '\n' ' '`
+	epnum=`echo $epnum | xargs`
 	if [[ -z "$epnum" ]]
 	then
             #echo 'try match epnum as EP'
@@ -59,7 +60,6 @@ do
 
         if [[ $re_code -eq 0 ]]
         then
-	    epnum=echo $epnum | xargs
             echo 'epnum:'
             echo $epnum
             ifdone=`sqlite3 ~/Downloads/epdb.db << EOF
