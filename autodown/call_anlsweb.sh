@@ -79,10 +79,21 @@ EOF`
 	    fi
             trackers=`cat trackers.txt`
             aria2c -c -d "$HOME/Downloads/$search_str" --log="/tmp/$search_str.log" --log-level=notice --enable-color=false --enable-dht=true --enable-dht6=true --enable-peer-exchange=true --follow-metalink=mem --seed-time=10 --max-overall-upload-limit=50K --bt-tracker=$trackers $mag
+            aria_task_status=$?
+            echo "$aria_task_status"
 	    chmod -R 777 "$HOME/Downloads/$search_str"
+            if [[ $aria_task_status -eq 0 ]]
+            then
+
+            echo "aria success end with $search_str"
             sqlite3 $HOME/Downloads/epdb.db << EOF
 insert into loglist values ("$search_str","$epnum");
 EOF
+            
+            else
+            
+            echo "aria failed end with $search_str"
+            fi
             exit 0
         fi
     fi
