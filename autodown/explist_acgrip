@@ -1,0 +1,8 @@
+#name,line 2:
+(?<=<span class="title">).*?(?=</span>)
+#size,line 4:
+(?<=class="size">).*?(?=</td>)
+#link,line 6:
+(?<=td class="action"><a href=").*?(?="><i class="fa fa-download"></i></a></td>)
+#time,line 8:
+(?<=<div><time datetime=).*?(?=</time></div>)

@@ -1,4 +1,17 @@
 #!/bin/bash
+if [[ -f /tmp/autodown.log ]]
+then
+echo "found /tmp/autodown.log, maybe duplicated process? exit now....." |tee /tmp/autodown.log
+exit
+fi
+
+function finish {
+	rm -rf /tmp/autodown.log
+}
+
+trap finish EXIT
+trap finish ERR
+
 arc=`uname -m|cut -c 1-3`
 if [[ $arc == 'arm' ]]
 then
@@ -8,10 +21,37 @@ else
 fi
 IFS=$'\r\n'
 
-time_s=`expr "3600" '*' "1"`
+time_s=`expr "1000" '*' "1"`
+
+templist='/tmp/eps.list'
 
 while [[ true ]]
 do
+
+#rm -rf /tmp/acgripinfo.txt
+rm -rf $templist
+#if [[ -f /tmp/acgripinfo.txt ]]
+if [[ -f $templist ]]
+then
+echo "unable rm $templist....."`date` | tee /tmp/autodown.log
+exit
+fi
+echo "start loop....."`date` | tee /tmp/autodown.log
+
+#encurl=`./callenc.sh 'https://acg.rip/'`
+#curl -X POST -d "{\"keyl\":\"$encurl\"}" http://176.56.237.58:8000 | base64 -d > /tmp/acgripinfo.txt
+./anlsweb.sh 'http://share.dmhy.org/' 'dmhy.re' > /tmp/eps.list
+re_code=$?
+if [[ ! $re_code -eq 0 ]]
+then
+    #rm /tmp/acgripinfo.txt
+    rm /tmp/eps.list
+    echo "Network error, pls check the connection!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    date
+fi
+
+
+
 namelist=($(cat auto_ani.list))
 i=0
 	while [[ $i -lt ${#namelist[@]} ]]
@@ -48,11 +88,12 @@ i=0
 		then
 			echo 'aria2c thr greater then '$thrcnt' , continue'
 			sleep 900
-			i=`expr $i + 1`
+		#	i=`expr $i + 1`
 			continue
 		fi
-		./36dm.sh "${namelist[i]}" &
-		sleep 50
+		#./acgrip2.sh "${namelist[i]}" &
+		./call_anlsweb.sh "${namelist[i]}"  &
+		sleep 10
 		i=`expr $i + 1`
 	done
 sleep $time_s

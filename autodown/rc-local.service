@@ -1,0 +1,15 @@
+[Unit]
+Description=/etc/rc.local Compatibility
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/etc/rc.local
+TimeoutSec=0
+RemainAfterExit=yes
+SysVStartPriority=99
+StandardOutput=tty
+User=sick
+
+[Install]
+WantedBy=multi-user.target
