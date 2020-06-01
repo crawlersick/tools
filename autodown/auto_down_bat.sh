@@ -21,7 +21,7 @@ else
 fi
 IFS=$'\r\n'
 
-time_s=`expr "1000" '*' "1"`
+time_s=`expr "100" '*' "1"`
 
 templist='/tmp/eps.list'
 
