@@ -23,14 +23,13 @@ IFS=$'\r\n'
 
 time_s=`expr "100" '*' "1"`
 
-templist='/tmp/eps.list'
+#templist='/tmp/eps.list'
+templist='/tmp/acgripinfo.txt'
 
 while [[ true ]]
 do
 
-#rm -rf /tmp/acgripinfo.txt
 rm -rf $templist
-#if [[ -f /tmp/acgripinfo.txt ]]
 if [[ -f $templist ]]
 then
 echo "unable rm $templist....."`date` | tee /tmp/autodown.log
@@ -38,14 +37,12 @@ exit
 fi
 echo "start loop....."`date` | tee /tmp/autodown.log
 
-#encurl=`./callenc.sh 'https://acg.rip/'`
-#curl -X POST -d "{\"keyl\":\"$encurl\"}" http://176.56.237.58:8000 | base64 -d > /tmp/acgripinfo.txt
-./anlsweb.sh 'http://share.dmhy.org/' 'dmhy.re' > /tmp/eps.list
+curl -X POST -d "{\"keyl\":\"https://acg.rip/\"}" "https://vm.n4r.nl/do" > /tmp/acgripinfo.txt
+#./anlsweb.sh 'http://share.dmhy.org/' 'dmhy.re' > /tmp/eps.list
 re_code=$?
 if [[ ! $re_code -eq 0 ]]
 then
-    #rm /tmp/acgripinfo.txt
-    rm /tmp/eps.list
+    rm $templist 
     echo "Network error, pls check the connection!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
     date
 fi
@@ -91,8 +88,8 @@ i=0
 		#	i=`expr $i + 1`
 			continue
 		fi
-		#./acgrip2.sh "${namelist[i]}" &
-		./call_anlsweb.sh "${namelist[i]}"  &
+		./acgrip2.sh "${namelist[i]}" &
+		#./call_anlsweb.sh "${namelist[i]}"  &
 		sleep 10
 		i=`expr $i + 1`
 	done

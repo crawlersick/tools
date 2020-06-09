@@ -1,6 +1,7 @@
 #!/bin/bash
 #umask 011
 downloadfolder=$HOME'/Downloads'
+myproxyurl="https://vm.n4r.nl/do"
 touch "$downloadfolder/autodownload.list"
 keyw=$1
 seedw=$2
@@ -49,8 +50,8 @@ echo "$keyw start try.."
 if [[ ! -f /tmp/acgripinfo.txt ]]
 then
     #curl  --insecure --compressed -G https://acg.rip > /tmp/acgripinfo.txt
-    encurl=`./callenc.sh 'https://acg.rip/'`
-    curl -X POST -d "{\"keyl\":\"$encurl\"}" http://176.56.237.58:8000 | base64 -d > /tmp/acgripinfo.txt
+    encurl='https://acg.rip/'
+    curl -X POST -d "{\"keyl\":\"$encurl\"}" "$myproxyurl"  > /tmp/acgripinfo.txt
     re_code=$?
     if [[ ! $re_code -eq 0 ]]
         then
@@ -285,9 +286,9 @@ then
     fi
     trackers=`cat trackers.txt`
     #curl --insecure  "$list11p" --output "$downloadfolder/$keyw"/temp.torrent
-    encurl=`./callenc.sh "$list11p"`
-    curl -X POST -d "{\"keyl\":\"$encurl\"}" http://176.56.237.58:8000 -o "$downloadfolder/$keyw"/temp.torrent.txt
-    base64 -d "$downloadfolder/$keyw"/temp.torrent.txt > "$downloadfolder/$keyw"/temp.torrent
+    encurl="$list11p"
+    curl -X POST -d "{\"keyl\":\"$encurl\"}" "$myproxyurl" -o "$downloadfolder/$keyw"/temp.torrent.txt
+    cat "$downloadfolder/$keyw"/temp.torrent.txt > "$downloadfolder/$keyw"/temp.torrent
         aria2c -c -d "$downloadfolder/$keyw" --allow-overwrite=true --log="/tmp/$keyw.log" --log-level=notice --enable-color=false --enable-dht=true --enable-dht6=true --enable-peer-exchange=true --follow-metalink=mem --seed-time=10 --max-overall-upload-limit=50K --bt-tracker=$trackers "$downloadfolder/$keyw"/temp.torrent
     #| tee "/tmp/$keyw.log"
     recode=$?
