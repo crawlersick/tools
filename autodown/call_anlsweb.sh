@@ -15,6 +15,17 @@ fi
 echo '>>>>>>>>>>>>>>>>>>>>>search for :'$search_str
 while read -r line
 do
+	
+	echo $line | grep -q 'NC-Raws'
+        check1=$?
+        if [[ $check1 -eq 0 ]]
+	then
+		echo "found NC-Raws, skip it"
+		continue
+	fi
+
+
+
 	mag=`echo $line |perl -ne 'print $3 if /(.*?)\|\|\|\|--\^\^--\|\|\|\|(.*?)\|\|\|\|--\^\^--\|\|\|\|(.*)/s'`
 	name=`echo $line |perl -ne 'print $2 if /(.*?)\|\|\|\|--\^\^--\|\|\|\|(.*?)\|\|\|\|--\^\^--\|\|\|\|(.*)/s'`
 	group=`echo $line |perl -ne 'print $1 if /(.*?)\|\|\|\|--\^\^--\|\|\|\|(.*?)\|\|\|\|--\^\^--\|\|\|\|(.*)/s'`

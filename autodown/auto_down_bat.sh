@@ -21,10 +21,10 @@ else
 fi
 IFS=$'\r\n'
 
-time_s=`expr "100" '*' "1"`
+time_s=`expr "800" '*' "1"`
 
-#templist='/tmp/eps.list'
-templist='/tmp/acgripinfo.txt'
+templist='/tmp/eps.list'
+#templist='/tmp/acgripinfo.txt'
 
 while [[ true ]]
 do
@@ -37,8 +37,8 @@ exit
 fi
 echo "start loop....."`date` | tee /tmp/autodown.log
 
-curl -X POST -d "{\"keyl\":\"https://acg.rip/\"}" "https://vm.n4r.nl/do" > /tmp/acgripinfo.txt
-#./anlsweb.sh 'http://share.dmhy.org/' 'dmhy.re' > /tmp/eps.list
+#curl -X POST -d "{\"keyl\":\"https://acg.rip/\"}" "https://vm.n4r.nl/do" > /tmp/acgripinfo.txt
+./anlsweb.sh 'http://share.dmhy.org/' 'dmhy.re' > /tmp/eps.list
 re_code=$?
 if [[ ! $re_code -eq 0 ]]
 then
@@ -88,10 +88,11 @@ i=0
 		#	i=`expr $i + 1`
 			continue
 		fi
-		./acgrip2.sh "${namelist[i]}" &
-		#./call_anlsweb.sh "${namelist[i]}"  &
-		sleep 10
+		#./acgrip2.sh "${namelist[i]}" &
+		./call_anlsweb.sh "${namelist[i]}"  &
+		sleep 3
 		i=`expr $i + 1`
 	done
+echo "will sleep $time_s for next run"
 sleep $time_s
 done
