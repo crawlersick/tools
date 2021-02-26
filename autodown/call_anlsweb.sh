@@ -16,11 +16,19 @@ echo '>>>>>>>>>>>>>>>>>>>>>search for :'$search_str
 while read -r line
 do
 	
-	echo $line | grep -q 'NC-Raws'
+        echo $line | grep -q 'NC-Raws'
         check1=$?
         if [[ $check1 -eq 0 ]]
 	then
 		echo "found NC-Raws, skip it"
+		continue
+	fi
+
+        echo $line | grep -q 'Lilith-Raws'
+        check2=$?
+        if [[ $check2 -eq 0 ]]
+	then
+		echo "found Lilith-Raws, skip it"
 		continue
 	fi
 
