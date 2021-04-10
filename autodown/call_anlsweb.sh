@@ -1,4 +1,5 @@
 sqlite3 $HOME/Downloads/epdb.db < init.sql
+sqlite3 $HOME/Downloads/raw_epdb.db < init.sql
 initoutput=".separator '||-||' '##-##'"
 search_str=$1
 if [[ -z "$search_str" ]]
@@ -15,22 +16,17 @@ fi
 echo '>>>>>>>>>>>>>>>>>>>>>search for :'$search_str
 while read -r line
 do
+	db_file=epdb.db
 	
-        echo $line | grep -q 'NC-Raws'
+        echo $line | egrep -q 'NC-Raws|Lilith-Raws'
         check1=$?
         if [[ $check1 -eq 0 ]]
 	then
-		echo "found NC-Raws, skip it"
-		continue
+		echo "found NC-Raws, mark it to other db"
+	        db_file=raw_epdb.db
+	
 	fi
 
-        echo $line | grep -q 'Lilith-Raws'
-        check2=$?
-        if [[ $check2 -eq 0 ]]
-	then
-		echo "found Lilith-Raws, skip it"
-		continue
-	fi
 
 
 
@@ -81,7 +77,7 @@ do
         then
             echo 'epnum:'
             echo $epnum
-            ifdone=`sqlite3 ~/Downloads/epdb.db << EOF
+            ifdone=`sqlite3 ~/Downloads/$db_file << EOF
 $initoutput
 select * from loglist where epname="$search_str" and epnum="$epnum";
 EOF`
@@ -105,7 +101,7 @@ EOF`
             then
 
             echo "aria success end with $search_str"
-            sqlite3 $HOME/Downloads/epdb.db << EOF
+            sqlite3 $HOME/Downloads/$db_file << EOF
 insert into loglist values ("$search_str","$epnum");
 EOF
             
