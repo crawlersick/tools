@@ -15,9 +15,9 @@ trap finish ERR
 arc=`uname -m|cut -c 1-3`
 if [[ $arc == 'arm' ]]
 then
-	thrcnt=5
+	thrcnt=4
 else
-	thrcnt=10
+	thrcnt=4
 fi
 IFS=$'\r\n'
 
@@ -80,16 +80,18 @@ i=0
 				continue
 			fi
 		fi
-		THREAD_COUNT=$(ps | grep "aria2c" | wc -l)
+		#THREAD_COUNT=$(ps | grep "aria2c" | wc -l)
+		THREAD_COUNT=$(ps | grep "auto_down_bat" | wc -l)
 		if [[ $THREAD_COUNT -ge $thrcnt ]]
 		then
-			echo 'aria2c thr greater then '$thrcnt' , continue'
-			sleep 900
+			#echo 'aria2c thr greater then '$thrcnt' , continue'
+			echo 'auto_down_bat thr greater then '$thrcnt' , continue: ------>  '$keyw
+			sleep 10
 		#	i=`expr $i + 1`
 			continue
 		fi
 		#./acgrip2.sh "${namelist[i]}" &
-		./call_anlsweb.sh "${namelist[i]}" 
+		./call_anlsweb.sh "${namelist[i]}" &
 		sleep 3
 		i=`expr $i + 1`
 	done
